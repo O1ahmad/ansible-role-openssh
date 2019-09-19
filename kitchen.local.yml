@@ -1,0 +1,42 @@
+---
+# kitchen configuration for local testing
+driver:
+  name: vagrant
+
+transport:
+  # TODO: remove with better solution than workaround:
+  # https://github.com/test-kitchen/test-kitchen/issues/1035
+  max_ssh_sessions: 6
+
+provisioner:
+  hosts: test-kitchen
+  name: ansible_playbook
+  require_chef_for_busser: false
+  require_ruby_for_busser: false
+  ansible_verbosity: 2
+  ansible_verbose: true
+  ansible_version: 2.8.1
+
+verifier:
+  name: inspec
+
+platforms:
+  # Redhat
+  - name: centos-7
+  - name: fedora-27
+  - name: fedora-28
+  - name: fedora-29
+  # Debian
+  - name: debian-8
+  - name: debian-9
+  - name: ubuntu-16.04
+  - name: ubuntu-18.04
+  - name: ubuntu-18.10
+
+suites:
+  - name: default
+    provisioner:
+      playbook: test/integration/default/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/default
