@@ -27,4 +27,6 @@ galaxy_info:
         - cosmic
 
   galaxy_tags:
-    - <tag>
+    - ssh
+    - remote
+    - login
