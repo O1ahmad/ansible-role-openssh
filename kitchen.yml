@@ -3,6 +3,19 @@
 driver:
   name: docker
 
+# Special config for enabling systemd init
+default_driver_config: &default_driver_config
+  run_command: /sbin/init
+  cap_add:
+    - SYS_ADMIN
+  run_options:
+    env: container=docker
+  volume:
+    - /sys/fs/cgroup:/sys/fs/cgroup
+  provision_command:
+    - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+    - systemctl enable sshd.service
+
 transport:
   # TODO: remove with better solution than workaround:
   # https://github.com/test-kitchen/test-kitchen/issues/1035
@@ -21,12 +34,40 @@ verifier:
 
 platforms:
   - name: centos-7
+    driver_config:
+      <<: *default_driver_config
   - name: fedora-28
+    driver_config:
+      <<: *default_driver_config
   - name: fedora-29
+    driver_config:
+      <<: *default_driver_config
   - name: ubuntu-16.04
+    driver_config:
+      <<: *default_driver_config
+      provision_command:
+        - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+        - systemctl enable ssh.service
   - name: ubuntu-18.04
+    driver_config:
+      <<: *default_driver_config
+      provision_command:
+        - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+        - systemctl enable ssh.service
   - name: debian-8
+    driver_config:
+      <<: *default_driver_config
+      run_command: /lib/systemd/systemd
+      provision_command:
+        - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+        - systemctl enable ssh.service
   - name: debian-9
+    driver_config:
+      <<: *default_driver_config
+      run_command: /lib/systemd/systemd
+      provision_command:
+        - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+        - systemctl enable ssh.service
 
 suites:
   - name: default
