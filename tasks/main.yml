@@ -1,2 +1,10 @@
 ---
 # main role installation, configuration and operation tasks
+- name: Include common install tasks
+  include_tasks: "common/install.yml"
+
+- name: Include common config tasks
+  include_tasks: "common/config.yml"
+
+- name: Include common service tasks
+  include_tasks: "common/service.yml"

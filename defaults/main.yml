@@ -1,2 +1,15 @@
 ---
-# defaults variable file
+# defaults variable file for openssh
+openssh_user: openssh
+
+service_name: sshd
+service_config_dir: /etc/ssh/
+service_config_file: sshd_config
+
+config:
+  server:
+    PermitRootLogin: 'yes'
+    AuthorizedKeysFile: '.ssh/authorized_keys'
+    ChallengeResponseAuthentication: 'no'
+    UsePAM: 'yes'
+    PrintMotd: 'no'
