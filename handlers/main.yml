@@ -1,2 +1,4 @@
 ---
 # default handlers file
+- name: restart SSH daemon
+  service: name="{{ service_name }}" state=restarted
