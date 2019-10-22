@@ -1,0 +1,28 @@
+---
+- name: Default playbook for testing
+  hosts: test-kitchen
+  roles:
+    - ansible-role-openssh
+  vars:
+    managed_configs:
+      - authorized_keys
+    config:
+      authorized_keys:
+        test:
+          "test-key-string":
+            options:
+              - "command='dump /home'"
+              - no-pty
+              - no-port-forwarding
+            key: "ssh-rsa @k3y comments"
+          "test-key-dict":
+            options:
+              - "from='*.test.example.net,!*.bad.test.example.net'"
+            key:
+              type: "ssh-rsa"
+              encoding: "th!s !s @ k3y"
+              comments: "these are the key comments"
+          "test-key-file":
+            options:
+              - "environment='NAME=value'"
+            key: "/etc/ssh/ssh_host_rsa_key.pub"

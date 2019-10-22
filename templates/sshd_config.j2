@@ -1,6 +1,6 @@
 # Managed by Ansible (0xOI/ansible-role-openssh)
 # see: sshd_config manual -- https://man.openbsd.org/sshd_config
 
-{% for key, value in config.server.items() %}
+{% for key, value in config.service.items() %}
 {{ key }} {{ value }}
 {% endfor %}

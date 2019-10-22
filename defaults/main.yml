@@ -13,13 +13,16 @@ client_config_file: ssh_config
 global_knownhosts_file: ssh_known_hosts
 user_knownhosts_file: known_hosts
 
+authorized_keys_file: authorized_keys
+
 managed_configs:
   - service
   - client
   - known_hosts
+  - authorized_keys
 
 config:
-  server:
+  service:
     PermitRootLogin: 'yes'
     AuthorizedKeysFile: '.ssh/authorized_keys'
     ChallengeResponseAuthentication: 'no'
