@@ -4,9 +4,9 @@
   roles:
     - ansible-role-openssh
   vars:
+    managed_configs:
+      - client
     config:
-      server:
-        PrintMotd: 'no'
       client:
         global:
           '*':
