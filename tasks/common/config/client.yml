@@ -1,34 +1,4 @@
 ---
-######### OpenSSH service (sshd_config) configuration rendering
-
-- name: Ensure existence of service configuration file
-  file:
-    path: "{{ global_config_dir }}/{{ service_config_file }}"
-    state: file
-    owner: root
-    group: root
-    mode: 0644
-  become: true
-  when: config.service is not none
-
-- name: backup original service configuration prior to applying automation
-  command: |
-    mv "{{ global_config_dir }}/{{ service_config_file }}" "{{ global_config_dir }}/{{ service_config_file }}.bak"
-  become: true
-  when: config.service is not none
-
-- name: Copy sshd_config configuration in place
-  template:
-    src: "{{ service_config_file }}.j2"
-    dest: "{{ global_config_dir }}/{{ service_config_file }}"
-    owner: root
-    group: root
-    mode: 0644
-  become: true
-  when: config.service is not none
-  notify:
-    - restart SSH daemon
-
 ######### OpenSSH client (ssh_config) configuration rendering
 
 - name: Check that the global SSH client config  exists
@@ -65,4 +35,3 @@
     account: "{{ item }}"
   with_items: "{{ config.client.keys() | difference(['global']) }}"
   become: true
-  when: config.client is not none

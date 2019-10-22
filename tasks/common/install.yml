@@ -10,7 +10,7 @@
     comment: OpenSSH service account
     name: "{{ openssh_user }}"
     group: "{{ openssh_user }}"
-    create_home: no
+    create_home: false
   become: true
 
 - name: Install OpenSSH package software
