@@ -3,6 +3,7 @@
 openssh_user: openssh
 
 service_name: sshd
+service_package: openssh
 service_config_dir: /etc/ssh/
 service_config_file: sshd_config
 

@@ -17,6 +17,16 @@
   become: true
   when: config.service is not none
 
+- name: Ensure proper permissions of backup to allow for all user reference
+  file:
+    path: "{{ service_config_dir }}/{{ service_config_file }}.bak"
+    state: file
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: config.service is not none
+
 - name: Copy sshd_config configuration in place
   template:
     src: "{{ service_config_file }}.j2"
