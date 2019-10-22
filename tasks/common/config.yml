@@ -36,3 +36,5 @@
     mode: 0600
   become: true
   when: config.service is not none
+  notify:
+    - restart SSH daemon
