@@ -3,3 +3,21 @@
   hosts: test-kitchen
   roles:
     - ansible-role-openssh
+  vars:
+    managed_configs:
+      - client
+      - known_hosts
+      - service
+    config:
+      server:
+        PrintMotd: 'no'
+      client:
+        global:
+          '*':
+            ForwardAgent: 'yes'
+      known_hosts:
+        kitchen:
+          "test-key-dict":
+            hostnames:
+              - "*"
+            key: "a key with comments"

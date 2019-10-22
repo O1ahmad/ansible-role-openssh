@@ -70,15 +70,21 @@ platforms:
         - systemctl enable ssh.service
 
 suites:
-  - name: service_config
-    provisioner:
-      playbook: test/integration/service_config/default_playbook.yml
-    verifier:
-      inspec_tests:
-        - path: test/integration/service_config
   - name: client_config
     provisioner:
       playbook: test/integration/client_config/default_playbook.yml
     verifier:
       inspec_tests:
         - path: test/integration/client_config
+  - name: known_hosts
+    provisioner:
+      playbook: test/integration/known_hosts/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/known_hosts
+  - name: service_config
+    provisioner:
+      playbook: test/integration/service_config/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/service_config

@@ -10,9 +10,13 @@ service_config_file: sshd_config
 
 client_config_file: ssh_config
 
+global_knownhosts_file: ssh_known_hosts
+user_knownhosts_file: known_hosts
+
 managed_configs:
   - service
   - client
+  - known_hosts
 
 config:
   server:

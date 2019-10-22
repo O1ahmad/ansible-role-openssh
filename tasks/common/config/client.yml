@@ -22,7 +22,7 @@
   vars:
     account: global
   become: true
-  when: config.client is not none
+  when: config.client and "global" in config.client
 
 - name: Copy user ssh_config configuration in place
   template:
