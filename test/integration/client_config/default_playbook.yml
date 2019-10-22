@@ -1,0 +1,20 @@
+---
+- name: Default playbook for testing
+  hosts: test-kitchen
+  roles:
+    - ansible-role-openssh
+  vars:
+    config:
+      server:
+        PrintMotd: 'no'
+      client:
+        global:
+          '*':
+            AddKeysToAgent: 'no'
+            ForwardAgent: 'yes'
+            IdentityFile: '~/.ssh/id_rsa'
+        kitchen:
+          'user.dev.com':
+            AddKeysToAgent: 'yes'
+            ForwardAgent: 'no'
+            IdentityFile: '~/.ssh/test_rsa'

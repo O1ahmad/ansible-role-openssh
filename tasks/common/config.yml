@@ -1,25 +1,9 @@
 ---
-# OpenSSH service (sshd_config) configuration rendering
+######### OpenSSH service (sshd_config) configuration rendering
 
 - name: Ensure existence of service configuration file
   file:
-    path: "{{ service_config_dir }}/{{ service_config_file }}"
-    state: file
-    owner: root
-    group: root
-    mode: 0600
-  become: true
-  when: config.service is not none
-
-- name: backup original service configuration prior to applying automation
-  command: |
-    mv "{{ service_config_dir }}/{{ service_config_file }}" "{{ service_config_dir }}/{{ service_config_file }}.bak"
-  become: true
-  when: config.service is not none
-
-- name: Ensure proper permissions of backup to allow for all user reference
-  file:
-    path: "{{ service_config_dir }}/{{ service_config_file }}.bak"
+    path: "{{ global_config_dir }}/{{ service_config_file }}"
     state: file
     owner: root
     group: root
@@ -27,14 +11,58 @@
   become: true
   when: config.service is not none
 
+- name: backup original service configuration prior to applying automation
+  command: |
+    mv "{{ global_config_dir }}/{{ service_config_file }}" "{{ global_config_dir }}/{{ service_config_file }}.bak"
+  become: true
+  when: config.service is not none
+
 - name: Copy sshd_config configuration in place
   template:
     src: "{{ service_config_file }}.j2"
-    dest: "{{ service_config_dir }}/{{ service_config_file }}"
+    dest: "{{ global_config_dir }}/{{ service_config_file }}"
     owner: root
     group: root
-    mode: 0600
+    mode: 0644
   become: true
   when: config.service is not none
   notify:
     - restart SSH daemon
+
+######### OpenSSH client (ssh_config) configuration rendering
+
+- name: Check that the global SSH client config  exists
+  stat:
+    path: "{{ global_config_dir }}/{{ client_config_file }}"
+  register: stat_result
+
+- name: backup original client configuration prior to applying automation
+  command: |
+    mv "{{ global_config_dir }}/{{ client_config_file }}" "{{ global_config_dir }}/{{ client_config_file }}.bak"
+  become: true
+  when: stat_result.stat.exists
+
+- name: Copy custom global ssh_config configuration in place
+  template:
+    src: "{{ client_config_file }}.j2"
+    dest: "{{ global_config_dir }}/{{ client_config_file }}"
+    owner: root
+    group: root
+    mode: 0644
+  vars:
+    account: global
+  become: true
+  when: config.client is not none
+
+- name: Copy user ssh_config configuration in place
+  template:
+    src: "{{ client_config_file }}.j2"
+    dest: "/home/{{ item }}/.ssh/{{ client_config_file }}"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+  vars:
+    account: "{{ item }}"
+  with_items: "{{ config.client.keys() | difference(['global']) }}"
+  become: true
+  when: config.client is not none

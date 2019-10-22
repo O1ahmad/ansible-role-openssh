@@ -76,3 +76,9 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/service_config
+  - name: client_config
+    provisioner:
+      playbook: test/integration/client_config/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/client_config
