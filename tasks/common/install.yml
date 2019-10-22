@@ -14,5 +14,5 @@
 
 - name: Install OpenSSH package software
   package:
-    name: openssh
+    name: "{{ service_package }}"
     state: present
