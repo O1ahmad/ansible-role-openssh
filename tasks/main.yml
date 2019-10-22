@@ -12,7 +12,7 @@
   include_tasks: "common/install.yml"
 
 - name: Include common config tasks
-  include_tasks: "common/config.yml"
+  include_tasks: "common/config/main.yml"
 
 - name: Include common service tasks
   include_tasks: "common/service.yml"

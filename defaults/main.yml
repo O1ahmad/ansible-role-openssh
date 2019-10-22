@@ -10,6 +10,10 @@ service_config_file: sshd_config
 
 client_config_file: ssh_config
 
+managed_configs:
+  - service
+  - client
+
 config:
   server:
     PermitRootLogin: 'yes'
