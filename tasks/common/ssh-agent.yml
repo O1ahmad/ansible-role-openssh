@@ -1,0 +1,53 @@
+---
+- name: Ensure existence of users to manage
+  user:
+    name: "{{ item.key }}"
+  with_dict: "{{ auto_enable_agent }}"
+  become: true
+  when: auto_enable_agent is not none
+
+- name: Ensure user shell has an environment variable for the socket
+  lineinfile:
+    path: "/home/{{ item.key }}/.bash_profile"
+    line: 'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"'
+  with_dict: "{{ auto_enable_agent }}"
+  when: auto_enable_agent is not none
+
+- name: Ensure existence of users systemd config directory
+  file:
+    path: "/home/{{ item.key }}/.config/systemd/user"
+    state: directory
+  with_dict: "{{ auto_enable_agent }}"
+  become: true
+  when: auto_enable_agent is not none
+
+- name: Render user controlled ssh-agent service file
+  template:
+    src: ssh-agent.service.j2
+    dest: "/home/{{ item.key }}/.config/systemd/user/ssh-agent.service"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: 0644
+    backup: true
+  vars:
+    owner: "{{ item.key }}"
+    run_args: "{{ item.value.run_args }}"
+  with_dict: "{{ auto_enable_agent }}"
+  become: true
+  when: auto_enable_agent is not none
+
+- name: Enable and start dbus-broker service for user scope
+  systemd:
+    name: dbus-broker
+    state: started
+    enabled: true
+    scope: user
+  become: true
+
+- name: Enable and start SSH Agent service for user scope
+  systemd:
+    name: ssh-agent
+    state: started
+    enabled: true
+    scope: user
+  become: true
