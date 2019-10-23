@@ -70,6 +70,12 @@ platforms:
         - systemctl enable ssh.service
 
 suites:
+  - name: authorized_keys
+    provisioner:
+      playbook: test/integration/authorized_keys/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/authorized_keys
   - name: client_config
     provisioner:
       playbook: test/integration/client_config/default_playbook.yml

@@ -5,6 +5,9 @@ describe file('/etc/ssh/ssh_known_hosts') do
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
   its('mode') { should cmp '0644' }
+  its('content') { should match("Managed by Ansible") }
+  its('content') { should match("ansible-role-openssh") }
+  its('content') { should match("@revoke") }
 end
 
 describe file('/home/kitchen/.ssh/known_hosts') do

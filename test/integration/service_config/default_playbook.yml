@@ -8,9 +8,9 @@
       - client
       - known_hosts
       - service
+      - authorized_keys
     config:
-      server:
-        PrintMotd: 'no'
+      authorized_keys:
       client:
         global:
           '*':
@@ -21,3 +21,5 @@
             hostnames:
               - "*"
             key: "a key with comments"
+      service:
+        PrintMotd: 'no'

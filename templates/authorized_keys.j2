@@ -1,0 +1,13 @@
+# Managed by Ansible (0xOI/ansible-role-openssh)
+# see: authorized_keys man specification -- https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT
+
+{% for spec in config.authorized_keys[account].values() %}
+{% if '.pub' in spec.key %}
+{{ spec.options|join(',') }} {{ lookup('file', spec.key) }}
+{% elif spec.key is mapping %}
+{{ spec.options|join(',') }} {{ spec.key.type }} {{ spec.key.encoding }} {{ spec.key.comments }}
+{% else %}
+{{ spec.options|join(',') }} {{ spec.key }}
+{% endif %}
+
+{% endfor %}
