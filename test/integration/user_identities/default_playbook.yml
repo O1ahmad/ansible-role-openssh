@@ -6,7 +6,7 @@
   vars:
     managed_configs:
       - user_identities
-    config:
+    ssh_config:
       user_identities:
         kitchen:
           src: "/etc/ssh/ssh_host_rsa_key"
