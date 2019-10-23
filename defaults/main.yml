@@ -20,6 +20,7 @@ managed_configs:
   - client
   - known_hosts
   - authorized_keys
+  - user_identities
 
 config:
   service:

@@ -3,28 +3,28 @@
 
 - name: Ensure existence of users to manage
   user:
-    name: "{{ item }}"
-  with_items: "{{ config.authorized_keys.keys() }}"
+    name: "{{ item.key }}"
+  with_dict: "{{ config.authorized_keys }}"
   become: true
   when: config.authorized_keys is not none
 
 - name: Ensure existence of users (to manage) home SSH directories
   file:
-    path: "/home/{{ item }}/.ssh"
+    path: "/home/{{ item.key }}/.ssh"
     state: directory
-  with_items: "{{ config.authorized_keys.keys() }}"
+  with_dict: "{{ config.authorized_keys }}"
   become: true
   when: config.authorized_keys is not none
 
 - name: Copy user authorized_keys configuration in place
   template:
     src: authorized_keys.j2
-    dest: "/home/{{ item }}/.ssh/{{ authorized_keys_file }}"
-    owner: "{{ item }}"
-    group: "{{ item }}"
+    dest: "/home/{{ item.key }}/.ssh/{{ authorized_keys_file }}"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
     mode: 0644
   vars:
-    account: "{{ item }}"
-  with_items: "{{ config.authorized_keys.keys() }}"
+    account: "{{ item.key }}"
+  with_dict: "{{ config.authorized_keys }}"
   become: true
   when: config.authorized_keys is not none

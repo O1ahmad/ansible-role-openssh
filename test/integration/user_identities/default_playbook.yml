@@ -1,0 +1,13 @@
+---
+- name: Default playbook for testing
+  hosts: test-kitchen
+  roles:
+    - ansible-role-openssh
+  vars:
+    managed_configs:
+      - user_identities
+    config:
+      user_identities:
+        kitchen:
+          src: "/etc/ssh/ssh_host_rsa_key"
+          dest: "id_rsa"
