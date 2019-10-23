@@ -19,6 +19,7 @@
     owner: root
     group: root
     mode: 0644
+    backup: true
   vars:
     account: global
   become: true
@@ -31,6 +32,7 @@
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: 0644
+    backup: true
   vars:
     account: "{{ item }}"
   with_items: "{{ config.known_hosts.keys() | difference(['global']) }}"
