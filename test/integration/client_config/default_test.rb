@@ -4,13 +4,6 @@ describe command('which ssh') do
   its('exit_status') { should eq 0 }
 end
 
-describe file('/etc/ssh/ssh_config.bak') do
-  it { should exist }
-  its('owner') { should eq 'root' }
-  its('group') { should eq 'root' }
-  its('mode') { should cmp '0644' }
-end
-
 describe file('/etc/ssh/ssh_config') do
   it { should exist }
   its('owner') { should eq 'root' }

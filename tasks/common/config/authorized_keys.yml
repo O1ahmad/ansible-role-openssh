@@ -23,6 +23,7 @@
     owner: "{{ item.key }}"
     group: "{{ item.key }}"
     mode: 0644
+    backup: true
   vars:
     account: "{{ item.key }}"
   with_dict: "{{ config.authorized_keys }}"
