@@ -94,3 +94,9 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/service_config
+  - name: user_identities
+    provisioner:
+      playbook: test/integration/user_identities/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/user_identities

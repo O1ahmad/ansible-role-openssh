@@ -9,8 +9,14 @@
       - known_hosts
       - service
       - authorized_keys
+      - user_identities
     config:
       authorized_keys:
+        test:
+          "test-key":
+            options:
+              - "command='dump /home'"
+            key: "/etc/ssh/ssh_host_rsa_key.pub"
       client:
         global:
           '*':
@@ -23,3 +29,7 @@
             key: "a key with comments"
       service:
         PrintMotd: 'no'
+      user_identities:
+        kitchen:
+          src: "/etc/ssh/ssh_host_rsa_key"
+          dest: "id_rsa"

@@ -1,0 +1,39 @@
+---
+######### OpenSSH User Identities (cryptographic key-pairs) configuration rendering
+
+- name: Ensure existence of users to manage
+  user:
+    name: "{{ item.key }}"
+  with_dict: "{{ config.user_identities }}"
+  become: true
+  when: config.user_identities is not none
+
+- name: Ensure existence of users (to manage) home SSH directories
+  file:
+    path: "/home/{{ item.key }}/.ssh"
+    state: directory
+  with_dict: "{{ config.user_identities }}"
+  become: true
+  when: config.user_identities is not none
+
+- name: Copy user private identities from local controller host in place on remote
+  copy:
+    src: "{{ item.value.src }}"
+    dest: "/home/{{ item.key }}/.ssh/{{ item.value.dest|default(item.value.src)|basename }}"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: '0644'
+  with_dict: "{{ config.user_identities }}"
+  become: true
+  when: config.user_identities is not none
+
+- name: Copy user public identities from local controller host in place on remote
+  copy:
+    src: "{{ item.value.src }}.pub"
+    dest: "/home/{{ item.key }}/.ssh/{{ item.value.dest|default(item.value.src)|basename }}.pub"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: '0644'
+  with_dict: "{{ config.user_identities }}"
+  become: true
+  when: config.user_identities is not none
