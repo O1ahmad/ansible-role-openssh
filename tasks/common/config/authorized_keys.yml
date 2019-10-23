@@ -4,17 +4,17 @@
 - name: Ensure existence of users to manage
   user:
     name: "{{ item.key }}"
-  with_dict: "{{ config.authorized_keys }}"
+  with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: config.authorized_keys is not none
+  when: ssh_config.authorized_keys is not none
 
 - name: Ensure existence of users (to manage) home SSH directories
   file:
     path: "/home/{{ item.key }}/.ssh"
     state: directory
-  with_dict: "{{ config.authorized_keys }}"
+  with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: config.authorized_keys is not none
+  when: ssh_config.authorized_keys is not none
 
 - name: Copy user authorized_keys configuration in place
   template:
@@ -26,6 +26,6 @@
     backup: true
   vars:
     account: "{{ item.key }}"
-  with_dict: "{{ config.authorized_keys }}"
+  with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: config.authorized_keys is not none
+  when: ssh_config.authorized_keys is not none

@@ -12,7 +12,7 @@
   vars:
     account: global
   become: true
-  when: config.client and "global" in config.client
+  when: ssh_config.client and "global" in ssh_config.client
 
 - name: Copy user ssh_config configuration in place
   template:
@@ -23,5 +23,5 @@
     mode: 0644
   vars:
     account: "{{ item }}"
-  with_items: "{{ config.client.keys() | difference(['global']) }}"
+  with_items: "{{ ssh_config.client.keys() | difference(['global']) }}"
   become: true

@@ -6,7 +6,7 @@
   vars:
     managed_configs:
       - known_hosts
-    config:
+    ssh_config:
       known_hosts:
         global:
           "test-key-string":
