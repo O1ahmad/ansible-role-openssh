@@ -1,4 +1,4 @@
-Ansible Role :link: OpenSSH
+Ansible Role :closed_lock_with_key: OpenSSH
 =========
 [![Galaxy Role](https://img.shields.io/ansible/role/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Downloads](https://img.shields.io/ansible/role/d/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
@@ -25,7 +25,6 @@ Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.co
 ##### Supported Platforms:
 ```
 * Debian
-* MacOS
 * Redhat(CentOS/Fedora)
 * Ubuntu
 ```
