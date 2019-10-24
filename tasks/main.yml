@@ -1,5 +1,5 @@
 ---
-# main role installation, configuration and operation tasks
+# main installation, configuration and operation tasks
 - name: Include OS and distribution specific variables.
   include_vars: "{{ item }}"
   with_first_found:
@@ -8,14 +8,10 @@
         - "{{ ansible_os_family }}.yml"
       skip: true
 
-- name: Include common install tasks
-  include_tasks: "common/install.yml"
-
-- name: Include common config tasks
-  include_tasks: "common/config/main.yml"
-
-- name: Include common service tasks
-  include_tasks: "common/service.yml"
-
-- name: Include common ssh-agent tasks
-  include_tasks: "common/ssh-agent.yml"
+- name: Include common setup tasks
+  include_tasks: "common/{{ item }}.yml"
+  with_items:
+    - "install"
+    - "config"
+    - "service"
+    - "ssh-agent"

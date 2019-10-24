@@ -2,8 +2,8 @@
 # see: ssh_config man specification -- https://man.openbsd.org/ssh_config
 
 {% for spec in ssh_config.client[account] %}
-Host {{ spec }}
-{% for key, value in ssh_config.client[account][spec].items() %}
+{{ ssh_config.client[account][spec].keyword|default("Host", true) }} {{ spec }}
+{% for key, value in ssh_config.client[account][spec].options.items() %}
   {{ key }} {{ value }}
 {% endfor %}
 
