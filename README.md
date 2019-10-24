@@ -13,7 +13,6 @@ Ansible Role :closed_lock_with_key: OpenSSH
       - [Install](#install)
       - [Config](#config)
       - [Launch](#launch)
-      - [Uninstall](#uninstall)
   - [Dependencies](#dependencies)
   - [Example Playbook](#example-playbook)
   - [License](#license)
@@ -40,7 +39,6 @@ Variables are available and organized according to the following software & mach
 * _install_
 * _config_
 * _launch_
-* _uninstall_
 
 #### Install
 
@@ -55,10 +53,6 @@ TBD
 TBD
 
 ##### Examples
-
-TBD
-
-#### Uninstall
 
 TBD
 
