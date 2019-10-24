@@ -166,8 +166,6 @@ GEM
       hashie (~> 3.4)
       inspec (>= 1.47, < 5.0)
       test-kitchen (>= 1.6, < 3)
-    kitchen-vagrant (1.5.2)
-      test-kitchen (>= 1.4, < 3)
     license-acceptance (1.0.13)
       pastel (~> 0.7)
       tomlrb (~> 1.2)
@@ -218,7 +216,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     public_suffix (3.1.0)
-    rake (12.3.2)
     representable (3.0.4)
       declarative (< 0.1.0)
       declarative-option (< 0.2.0)
@@ -368,8 +365,6 @@ DEPENDENCIES
   kitchen-ansible
   kitchen-docker
   kitchen-inspec
-  kitchen-vagrant
-  rake
   test-kitchen
 
 BUNDLED WITH

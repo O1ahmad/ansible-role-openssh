@@ -6,15 +6,19 @@
   vars:
     managed_configs:
       - client
+    auto_enable_agent: []
     ssh_config:
       client:
         global:
           '*':
-            AddKeysToAgent: 'no'
-            ForwardAgent: 'yes'
-            IdentityFile: '~/.ssh/id_rsa'
+            options:
+              AddKeysToAgent: 'no'
+              ForwardAgent: 'yes'
+              IdentityFile: '~/.ssh/id_rsa'
         kitchen:
-          'user.dev.com':
-            AddKeysToAgent: 'yes'
-            ForwardAgent: 'no'
-            IdentityFile: '~/.ssh/test_rsa'
+          'host "dev-user.dev.com" and "dev-user"':
+            keyword: "Match"
+            options:
+              AddKeysToAgent: 'no'
+              ForwardAgent: 'no'
+              IdentityFile: '~/.ssh/test_rsa'

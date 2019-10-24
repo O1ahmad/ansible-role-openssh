@@ -3,7 +3,7 @@
 galaxy_info:
   author: Ahmad Wilson
   role_name: openssh
-  description: role for OpenSSH, a remote login tool based on the SSH protocol
+  description: OpenSSH (Secure Shell), a remote login tool based on the SSH protocol
   company: "O1 Labs"
   license: license (Apache, BSD, MIT)
   min_ansible_version: 2.6
@@ -28,5 +28,7 @@ galaxy_info:
 
   galaxy_tags:
     - ssh
+    - secure
+    - shell
     - remote
     - login

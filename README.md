@@ -1,9 +1,11 @@
-Ansible Role <Role>
+Ansible Role :link: OpenSSH
 =========
-[![Galaxy Role](*role-shield-link*)](--role-link--)
-[![Downloads](*downloads-shield-link*)](--role-link--)
-[![Build Status](*build-shield-link*)](--role-link--)
+[![Galaxy Role](https://img.shields.io/ansible/role/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
+[![Downloads](https://img.shields.io/ansible/role/d/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
+[![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
   - [Supported Platforms](#supported-platforms)
   - [Requirements](#requirements)
@@ -16,8 +18,9 @@ Ansible Role <Role>
   - [Example Playbook](#example-playbook)
   - [License](#license)
   - [Author Information](#author-information)
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-...*description of role*...
+Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.com/): a remote login and operations tool based on the SSH protocol.
 
 ##### Supported Platforms:
 ```
@@ -30,7 +33,7 @@ Ansible Role <Role>
 Requirements
 ------------
 
-...*description of provisioning requirements*...
+TBD
 
 Role Variables
 --------------
@@ -42,33 +45,33 @@ Variables are available and organized according to the following software & mach
 
 #### Install
 
-...*description of installation related vars*...
+TBD
 
 #### Config
 
-...*description of configuration related vars*...
+TBD
 
 #### Launch
 
-...*description of service launch related vars*...
+TBD
+
+##### Examples
+
+TBD
 
 #### Uninstall
 
-...*description of uninstallation related vars*...
+TBD
 
 Dependencies
 ------------
 
-...*list dependencies*...
+None
 
 Example Playbook
 ----------------
-default example:
-```
-- hosts: all
-  roles:
-  - role: 0xOI.<role>
-```
+
+TBD
 
 License
 -------

@@ -21,7 +21,8 @@
       client:
         global:
           '*':
-            ForwardAgent: 'yes'
+            options:
+              ForwardAgent: 'yes'
       known_hosts:
         kitchen:
           "test-key-dict":
