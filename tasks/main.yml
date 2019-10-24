@@ -16,3 +16,6 @@
 
 - name: Include common service tasks
   include_tasks: "common/service.yml"
+
+- name: Include common ssh-agent tasks
+  include_tasks: "common/ssh-agent.yml"
