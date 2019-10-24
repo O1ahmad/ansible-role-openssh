@@ -10,6 +10,7 @@
       - service
       - authorized_keys
       - user_identities
+    auto_enable_agent: []
     ssh_config:
       authorized_keys:
         test:

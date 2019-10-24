@@ -7,12 +7,24 @@
   become: true
   when: auto_enable_agent is not none
 
-- name: Ensure user shell has an environment variable for the socket
+- name: Ensure existence of user shell profile file
+  file:
+    path: "/home/{{ item.key }}/.bash_profile"
+    owner: "{{ item.key }}"
+    group: "{{ item.key }}"
+    mode: 0644
+    state: touch
+  with_dict: "{{ auto_enable_agent }}"
+  become: true
+  when: auto_enable_agent is not none
+
+- name: Ensure user shell has an environment variable for the ssh-auth socket
   lineinfile:
     path: "/home/{{ item.key }}/.bash_profile"
     line: 'export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"'
     state: present
   with_dict: "{{ auto_enable_agent }}"
+  become: true
   when: auto_enable_agent is not none
 
 - name: Ensure existence of users systemd config directory
