@@ -6,7 +6,7 @@
   vars:
     managed_configs:
       - client
-    config:
+    ssh_config:
       client:
         global:
           '*':

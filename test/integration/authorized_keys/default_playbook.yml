@@ -6,7 +6,7 @@
   vars:
     managed_configs:
       - authorized_keys
-    config:
+    ssh_config:
       authorized_keys:
         test:
           "test-key-string":
