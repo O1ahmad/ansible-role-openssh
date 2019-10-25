@@ -31,13 +31,11 @@ Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.co
 Requirements
 ------------
 
-Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both the **zlib** and **libcrypto** libraries (included within *LibreSSl/OpenSSL*) are required.
-
-A C compiler is generally available on the supported platforms/linux distributions by default but can be downloaded using each platforms' native package manager if necessary. Reference https://gcc.gnu.org/wiki/InstallingGCC for additional details.
+Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both the **zlib** and **libcrypto** libraries (included within *LibreSSl/OpenSSL*) are required. A C compiler is generally available on supported platforms/linux distributions by default but can be downloaded using each platforms' native package manager if necessary. Reference https://gcc.gnu.org/wiki/InstallingGCC for additional details.
 
 **Zlib** version 1.1.4, 1.2.1.2 or greater is suggested (see https://zlib.net/fossils/ for released versions).
 
-Also note that newer versions of *OpenSSH* require or strongly encourage a dedicated authentication account used by `sshd` for privilege separation. This is automatically managed by this role and configurable via custom user vars.
+Also note that newer versions of *OpenSSH* require or strongly encourage a dedicated authentication account used by `sshd` for privilege separation. This is automatically managed by this role and configurable via custom operator vars.
 
 Optional
 --------
@@ -66,7 +64,7 @@ _The following variables can be customized to control various aspects of this in
 - dedicated service user, group and directory used by `sshd` for privilege separation (see: [README.privsep](https://github.com/openssh/openssh-portable/blob/master/README.privsep) for details)
 
 `auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: None - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
-- keyed by user account to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains`run_args` for customization of agent launch.
+- indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
 
 #### Config
 
