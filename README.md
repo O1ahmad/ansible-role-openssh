@@ -19,7 +19,7 @@ Ansible Role :closed_lock_with_key: OpenSSH
   - [Author Information](#author-information)
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.com/): a remote login and operations tool based on the SSH protocol.
+Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.com/): a remote login and operations tool based on the **SSH protocol**.
 
 ##### Supported Platforms:
 ```
@@ -31,20 +31,20 @@ Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.co
 Requirements
 ------------
 
-Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both zlib and libcrypto (included within LibreSSl/OpenSSL) are required.
+Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both the **zlib** and **libcrypto** libraries (included within *LibreSSl/OpenSSL*) are required.
 
 A C compiler is generally available on the supported platforms/linux distributions by default but can be downloaded using each platforms' native package manager if necessary. Reference https://gcc.gnu.org/wiki/InstallingGCC for additional details.
 
-Zlib version 1.1.4, 1.2.1.2 or greater is suggested (see https://zlib.net/fossils/ for released versions).
+**Zlib** version 1.1.4, 1.2.1.2 or greater is suggested (see https://zlib.net/fossils/ for released versions).
 
-Also note that newer versions of OpenSSH require or strongly encourage a dedicated authentication account used by `sshd` for privilege separation. This is automatically managed by this role and configurable via custom user vars.
+Also note that newer versions of *OpenSSH* require or strongly encourage a dedicated authentication account used by `sshd` for privilege separation. This is automatically managed by this role and configurable via custom user vars.
 
 Optional
 --------
 
-OpenSSH makes use of pseudo-random number generators or prngs for various aspects of functionality, including but not limited to public-key cryptography. Some Unix variants (including Linux and OpenBSD) have a device driver, accessed through /dev/random and /dev/urandom, that provides random bits and a constant supply or pool of randomness for ssh to consume. There are also dedicated programs written like the “Entropy Gathering Daemon” or EGD (see http://www.lothar.com/tech/crypto/) which provide a similar service.
+*OpenSSH* makes use of pseudo-random number generators or *prngs* for various aspects of functionality, including but not limited to public-key cryptography. Some Unix variants (including Linux and OpenBSD) have a device driver, accessed through `/dev/random` and `/dev/urandom`, that provides random bits and a constant supply or pool of randomness for ssh to consume. There are also dedicated programs written like the **Entropy Gathering Daemon** or EGD (see http://www.lothar.com/tech/crypto/) which provide a similar service.
 
-Installation of external entropy-gathering services is left upto the user but usage can be controlled by the `--with-egd-pool` argument, managed by specification of extra run args provided to this role (see <...> for details). If a prng pool is not specified, OpenSSH uses an internal entropy-gathering mechanism by default.
+Installation of external entropy-gathering services is left upto the operator but usage can be controlled by the `--with-egd-pool` argument, passed to `sshd` and managed by specification of extra run args provided to this role (see <...> for details). **note:** If a prng pool is not specified, *OpenSSH* uses an internal entropy-gathering mechanism by default.
 
 Role Variables
 --------------
@@ -55,7 +55,19 @@ Variables are available and organized according to the following software & mach
 
 #### Install
 
-TBD
+
+`openssh`can be installed using OS package management systems provided by the supported platforms (e.g `apt`, `yum/dnf`).
+
+_The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of the associated and supplementary SSH key caching agent (`ssh-agent`):_
+
+`service_package: <package-name-and-version>` (**default**: openssh[-latest])
+- name and version of the openssh package to download and install. Reference http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages supported by your platform.
+
+`openssh_user: <service-user-name>` (**default**: openssh)
+- dedicated service user, group and directory used by `sshd` for privilege separation (see: https://github.com/openssh/openssh-portable/blob/master/README.privsep for details)
+
+`auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: None - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
+- keyed by user account to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains key, `run_args` for customization of agent launch.
 
 #### Config
 
