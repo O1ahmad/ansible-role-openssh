@@ -60,10 +60,10 @@ Variables are available and organized according to the following software & mach
 _The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of the associated and supplementary SSH key caching agent (`ssh-agent`):_
 
 `service_package: <package-name-and-version>` (**default**: openssh[-latest])
-- name and version of the openssh package to download and install. Reference http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages supported by your platform.
+- name and version of the openssh package to download and install. [Reference](http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh) or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages for your platform.
 
 `openssh_user: <service-user-name>` (**default**: openssh)
-- dedicated service user, group and directory used by `sshd` for privilege separation (see: https://github.com/openssh/openssh-portable/blob/master/README.privsep for details)
+- dedicated service user, group and directory used by `sshd` for privilege separation (see: [README.privsep](https://github.com/openssh/openssh-portable/blob/master/README.privsep) for details)
 
 `auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: None - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
 - keyed by user account to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains key, `run_args` for customization of agent launch.
