@@ -55,7 +55,6 @@ Variables are available and organized according to the following software & mach
 
 #### Install
 
-
 `openssh`can be installed using OS package management systems provided by the supported platforms (e.g `apt`, `yum/dnf`).
 
 _The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of the associated and supplementary SSH key caching agent (`ssh-agent`):_
@@ -75,7 +74,17 @@ TBD
 
 #### Launch
 
-TBD
+Running both the `openssh` server and `ssh-agent` key caching daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms.
+
+_Launched as background processes or daemons subject to the configuration and execution potential provided by the underlying systemd management framework, `openssh` and `ssh-agent` can be customized to adhere to system administrative policies right for your environment and organization via the use of the following launch arguments:_
+
+`extra_run_args: <sshd-cli-options>` (**default**: None)
+- list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. Supporting full expression of `sshd`'s cli, this variable enables the role of target hosts to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass configuration values`.
+
+A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
+
+`[enable_ssh_agent : <account>]:run_args: <ssh-agent-cli-options>` (**default**: see `defaults/main.yml`)
+- list of `ssh-agent` commandline arguments to modify the default behavior of the SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format (see [here](https://linux.die.net/man/1/ssh-agent) for available options).
 
 ##### Examples
 
