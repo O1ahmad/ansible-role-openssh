@@ -15,7 +15,7 @@ describe file('/etc/ssh/ssh_config') do
   its('content') { should match("Host *") }
 end
 
-describe file('/home/kitchen/.ssh/ssh_config') do
+describe file('/home/kitchen/.ssh/config') do
   it { should exist }
   its('owner') { should eq 'kitchen' }
   its('group') { should eq 'kitchen' }

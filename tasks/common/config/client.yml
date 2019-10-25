@@ -17,7 +17,7 @@
 - name: Copy user ssh_config configuration in place
   template:
     src: "{{ client_config_file }}.j2"
-    dest: "/home/{{ item }}/.ssh/{{ client_config_file }}"
+    dest: "/home/{{ item }}/.ssh/config"
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: 0644

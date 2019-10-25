@@ -7,6 +7,7 @@ global_config_dir: /etc/ssh
 service_name: sshd
 service_package: openssh
 service_config_file: sshd_config
+extra_run_args: ""
 
 client_config_file: ssh_config
 
