@@ -78,16 +78,16 @@ Using this role, configuration of `openssh` is organized according to the follow
 * _client config (`ssh_config`)_
 * _known hosts (`ssh_known_hosts #global` and `known_hosts #per-user`)_
 * _authorized keys (`authorized_keys`)_
-* _user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)
+* _user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)_
 
 Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations for reference.
 
-_SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_
+##### _SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_
 
 `[config:] service : <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
 
-##### Example
+###### Example
 
  ```yaml
   config:
@@ -98,15 +98,17 @@ _SSH daemon configuration values are defined under `config.service` and describe
       PubKeyAuthentication: "yes"
   ```
   
-  _SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user). Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:_
+##### _SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)_
+
+##### Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:
   
 `[config:] client : <global | user-account> : keyword : <Host | Match>` (**default**: *Host*)
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details).
   
 `[config:] client : <global | user-account> : options : <key: value,...>` (**default**: see `defaults/main.yml`)
-- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
+- a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config).
 
-##### Example
+###### Example
 
  ```yaml
   config:
@@ -118,30 +120,91 @@ _SSH daemon configuration values are defined under `config.service` and describe
               # disable auto add and forwarding of user keys by an `ssh-agent`
               AddKeysToAgent: 'no'
               ForwardAgent: 'no'
-              IdentityFile: '~/.ssh/secureId_rsa'
         # custom settings for user-account-1 
         user-account-1:
-          # add and forward keys and user 
-          'host "dev-user.dev.com"':
+          # add and forward keys on connections to machines with hostnames matching the dev domain
+          'host "dev-user.dev.net"':
             keyword: "Match"
             options:
               AddKeysToAgent: 'yes'
               ForwardAgent: 'yes'
-              IdentityFile: '~/.ssh/test_rsa'
         user-account-2:
-          '*.prod.com':
-            keyword: "Match"
+          # connect to hosts in test domain using designated test key and execute custom command on connection
+          '*.test.net':
+            keyword: "Host"
             options:
-              AddKeysToAgent: 'no'
-              ForwardAgent: 'no'
+              LocalCommand: '~/test/show_test_results'
               IdentityFile: '~/.ssh/test_rsa'
+        user-account-3:
+          # default keyword of 'Host'
+          # also silence ssh client logging and use designated production key
+          '*.prod.com':
+            options:
+              LogLevel: "QUIET"
+              IdentityFile: '~/.ssh/prod_rsa'
+  ```
+  
+##### _Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly._
+
+##### Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`:
+  
+`[config:] known_hosts : {global | user-account} : marker: <@cert-authority | @revoke>` (**default**: *None*)
+- indicates that the line contains either a certification authority (@cert-authority) key or “@revoked” to indicate that the key contained on the line is revoked and must not ever be accepted
+  
+`[config:] known_hosts : {global | user-account} : hostnames : <list of patterns>` (**default**: *None*)
+- comma-separated list of patterns matched against hostnames to verify known identity
+
+`[config:] known_hosts : {global | user-account} : key : <host-pub-key>` (**default**:*None*)
+- cryptographic public host key representing proof of authenticity for host being connected to
+
+Cryptographic keys included can be expressed in several formats:
+* _string - key definition containing: key-type, encoded key and additional comments_
+* _file - local path on controller to file containing keydefinition_
+* _hash - dict containing separate keys for key definition components ({type:...,encoding:...,comments:...})_
+
+###### Example
+
+ ```yaml
+  config:
+    known_hosts:
+        # system-wide settings
+        global:
+          "Revoke ALL evil hosts":
+            hostnames:
+              - "*.evil.org"
+            # key expressed string
+            key: "ssh-rsa @k3y..."
+            # mark for revocation
+            marker: "@revoked"
+        user-account-1:
+          # add and forward keys on connections to machines with hostnames matching the dev domain
+          'Certified Authorities':
+            hostnames:
+              # host name stored in hash form
+              - "|1|JfKTdBh7rNbXkVAQCRp4OQoPfmI=|USECr3SWf1JUPsms5AqfD5QfxkM="
+              - "certified.net,*.mydomain.org,*.mydomain.com"
+            # host key read from file
+            key: "/etc/ssh/cert_auth_host_rsa.pub"
+            # mark line contains a certification authority
+            marker: "@cert-authority"
+        user-account-2:
+          'Organization network':
+            hostnames:
+              - "10.0.*.*"
+              - "*.example.org"
+              # negate access from known compromised network
+              - "!*compromised.org"
+            key:
+              type: "ssh-rsa"
+              encoding: "th!s!s@HoSTk3y"
+              comments: "Known host key"
   ```
 
 #### Launch
 
 Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:_
 
-`extra_run_args: <sshd-cli-options>` (**default**: None)
+`extra_run_args: <cli-options>` (**default**: None)
 - list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values.
 
 A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
@@ -153,7 +216,7 @@ A list of available command-line options can be found [here](https://www.freebsd
 extra_run_args: "-4 -E /var/log/sshd.log"
 ```
 
-`[auto_enable_agent : <account>]:run_args: <ssh-agent-cli-options>` (**default**: *None*)
+`[auto_enable_agent : <account>]:run_args: <cli-options>` (**default**: *None*)
 - list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format.
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
