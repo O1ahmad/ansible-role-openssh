@@ -37,13 +37,6 @@ Pre-installation of a C-compiler (any C89 or better compiler should work) as wel
 
 Also note that newer versions of *OpenSSH* require or strongly encourage a dedicated authentication account used by `sshd` for privilege separation. This is automatically managed by this role and configurable via custom operator vars.
 
-Optional
---------
-
-*OpenSSH* makes use of pseudo-random number generators or *prngs* for various aspects of functionality, including but not limited to public-key cryptography. Some Unix variants (including Linux and OpenBSD) have a device driver, accessed through `/dev/random` and `/dev/urandom`, that provides random bits and a constant supply or pool of randomness for ssh to consume. There are also dedicated programs written like the **Entropy Gathering Daemon** or EGD (see http://www.lothar.com/tech/crypto/) which provide a similar service.
-
-Installation of external entropy-gathering services is left upto the operator but usage can be controlled by the `--with-egd-pool` argument, passed to `sshd` and managed by specification of extra run args provided to this role (see <...> for details). **note:** If a prng pool is not specified, *OpenSSH* uses an internal entropy-gathering mechanism by default.
-
 Role Variables
 --------------
 Variables are available and organized according to the following software & machine provisioning stages:
@@ -66,16 +59,83 @@ _The following variables can be customized to control various aspects of this in
 `auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: *None* - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
 - indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
 
+##### Example
+
  ```yaml
   auto_enable_agent:
     # users
     example-1: {}
-    example-2: {}
+    example-2:
+       # launch ssh-agent in debug mode with key TTL of 1 hour
+       run_args: "-d -t 3600"
   ```
 
 #### Config
 
-TBD
+Using this role, configuration of `openssh` is organized according to the following components:
+
+* _service config (`sshd_config`)_
+* _client config (`ssh_config`)_
+* _known hosts (`ssh_known_hosts #global` and `known_hosts #per-user`)_
+* _authorized keys (`authorized_keys`)_
+* _user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)
+
+Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations for reference.
+
+_SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_
+
+`[config:] service : <key: value,...>` (**default**: see `defaults/main.yml`)
+- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
+
+##### Example
+
+ ```yaml
+  config:
+    service:
+      # disable password and challenge-response authentication methods and enable Public-Key auth *ONLY*
+      PasswordAuthentication: "no"
+      ChallengeResponseAuthentication: "no"
+      PubKeyAuthentication: "yes"
+  ```
+  
+  _SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user). Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:_
+  
+`[config:] client : <global | user-account> : keyword : <Host | Match>` (**default**: *Host*)
+- entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details).
+  
+`[config:] client : <global | user-account> : options : <key: value,...>` (**default**: see `defaults/main.yml`)
+- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
+
+##### Example
+
+ ```yaml
+  config:
+    client:
+        # system-wide settings
+        global:
+          '*':
+            options:
+              # disable auto add and forwarding of user keys by an `ssh-agent`
+              AddKeysToAgent: 'no'
+              ForwardAgent: 'no'
+              IdentityFile: '~/.ssh/secureId_rsa'
+        # custom settings for user-account-1 
+        user-account-1:
+          # add and forward keys and user 
+          'host "dev-user.dev.com"':
+            keyword: "Match"
+            options:
+              AddKeysToAgent: 'yes'
+              ForwardAgent: 'yes'
+              IdentityFile: '~/.ssh/test_rsa'
+        user-account-2:
+          '*.prod.com':
+            keyword: "Match"
+            options:
+              AddKeysToAgent: 'no'
+              ForwardAgent: 'no'
+              IdentityFile: '~/.ssh/test_rsa'
+  ```
 
 #### Launch
 
@@ -86,22 +146,26 @@ Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizin
 
 A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
 
-- **e.g.** Launch the SSH daemon only accepting IPv4 addresses and also writing log output to a location besides the system log:
-  ```yaml
-  extra_run_args: "-4 -E /var/log/sshd.log"
-  ```
+##### Example
+  
+```yaml
+# Launch the SSH daemon only accepting IPv4 addresses and also writing log output to a location besides the system log
+extra_run_args: "-4 -E /var/log/sshd.log"
+```
 
 `[auto_enable_agent : <account>]:run_args: <ssh-agent-cli-options>` (**default**: *None*)
 - list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format.
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
 
-- **e.g.** Automatically install a user-scoped ssh-agent for the *example* user and specify a maximum lifetime for cached identities of 86,400 seconds (or 1 day):
+##### Example
+
   ```yaml
   auto_enable_agent:
     # user
     example:
-       # arguments to pass to the ssh-agent on launch - set key TTL of 1 day
+       # automatically install a user-scoped ssh-agent for the *example* user and specify
+       # a maximum lifetime for cached identities of 86,400 seconds (or 1 day):
        run_args: "-t 86400"
   ```
 
