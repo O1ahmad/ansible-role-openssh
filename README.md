@@ -55,20 +55,20 @@ Variables are available and organized according to the following software & mach
 
 `openssh`can be installed using OS package management systems provided by the supported platforms (e.g `apt`, `yum/dnf`).
 
-_The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of the SSH key caching agent (`ssh-agent`):_
+_The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of an SSH key caching agent (`ssh-agent`):_
 
-`service_package: <package-name-and-version>` (**default**: openssh[-latest])
+`service_package: <package-name-and-version>` (**default**: *openssh*[-latest])
 - name and version of the openssh package to download and install. [Reference](http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh) or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages for your platform.
 
-`openssh_user: <service-user-name>` (**default**: openssh)
+`openssh_user: <service-user-name>` (**default**: *openssh*)
 - dedicated service user, group and directory used by `sshd` for privilege separation (see [README.privsep](https://github.com/openssh/openssh-portable/blob/master/README.privsep) for details)
 
-`auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: None - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
+`auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: *None* - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
 - indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
 
  ```yaml
   auto_enable_agent:
-    # user
+    # users
     example-1: {}
     example-2: {}
   ```
@@ -79,7 +79,7 @@ TBD
 
 #### Launch
 
-Running of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:_
+Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:_
 
 `extra_run_args: <sshd-cli-options>` (**default**: None)
 - list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values.
@@ -91,12 +91,12 @@ A list of available command-line options can be found [here](https://www.freebsd
   extra_run_args: "-4 -E /var/log/sshd.log"
   ```
 
-`[auto_enable_agent : <account>]:run_args: <ssh-agent-cli-options>` (**default**: None)
+`[auto_enable_agent : <account>]:run_args: <ssh-agent-cli-options>` (**default**: *None*)
 - list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format.
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
 
-- **e.g.** Automatically install a user-scoped ssh-agent for the *example* user and specify a maximum lifetime of cached identities of 86,400 seconds or 1 day:
+- **e.g.** Automatically install a user-scoped ssh-agent for the *example* user and specify a maximum lifetime for cached identities of 86,400 seconds (or 1 day):
   ```yaml
   auto_enable_agent:
     # user
@@ -104,10 +104,6 @@ A list of available command-line options can be found [here](https://linux.die.n
        # arguments to pass to the ssh-agent on launch - set key TTL of 1 day
        run_args: "-t 86400"
   ```
-
-##### Examples
-
-TBD
 
 Dependencies
 ------------
