@@ -31,7 +31,7 @@ Ansible role that installs, configures and runs [OpenSSH](https://www.openssh.co
 Requirements
 ------------
 
-Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both the **zlib** and **libcrypto** libraries (included within *LibreSSl/OpenSSL*) are required. A C compiler is generally available on supported platforms/linux distributions by default but can be downloaded using each platforms' native package manager if necessary. Reference https://gcc.gnu.org/wiki/InstallingGCC for additional details.
+Pre-installation of a C-compiler (any C89 or better compiler should work) as well as working installations of both the **zlib** and **libcrypto** libraries (included within *LibreSSl/OpenSSL*) are required. A C compiler is generally available on supported platforms/linux distributions by default but can be downloaded using each platforms' native package manager if necessary. [Reference](https://gcc.gnu.org/wiki/InstallingGCC) for additional details.
 
 **Zlib** version 1.1.4, 1.2.1.2 or greater is suggested (see https://zlib.net/fossils/ for released versions).
 
@@ -44,7 +44,7 @@ Variables are available and organized according to the following software & mach
 * _config_
 * _launch_
 
-#### Install
+### Install
 
 `openssh`can be installed using OS package management systems provided by the supported platforms (e.g `apt`, `yum/dnf`).
 
@@ -56,10 +56,10 @@ _The following variables can be customized to control various aspects of this in
 `openssh_user: <service-user-name>` (**default**: *openssh*)
 - dedicated service user, group and directory used by `sshd` for privilege separation (see [README.privsep](https://github.com/openssh/openssh-portable/blob/master/README.privsep) for details)
 
-`auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: *None* - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
+`auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: *None*)
 - indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
 
-##### Example
+#### Example
 
  ```yaml
   auto_enable_agent:
@@ -70,24 +70,26 @@ _The following variables can be customized to control various aspects of this in
        run_args: "-d -t 3600"
   ```
 
-#### Config
+### Config
 
 Using this role, configuration of `openssh` is organized according to the following components:
 
-* _service config (`sshd_config`)_
-* _client config (`ssh_config`)_
-* _known hosts (`ssh_known_hosts #global` and `known_hosts #per-user`)_
-* _authorized keys (`authorized_keys`)_
-* _user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)_
+* service (`sshd_config`)
+* client (`ssh_config`)
+* known hosts (`ssh_known_hosts #global` and `known_hosts #per-user`)
+* authorized keys (`authorized_keys`)
+* user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)
 
 Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations for reference.
 
-##### _SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_
+#### Service
+
+**_SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_**
 
 `[config:] service: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
 
-###### Example
+##### Example
 
  ```yaml
   config:
@@ -98,7 +100,9 @@ Each configuration can be expressed within a hash, keyed by user account where a
       PubKeyAuthentication: "yes"
   ```
   
-##### SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)
+#### Client
+
+**SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)**
 
 *** Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis: ***
   
@@ -108,7 +112,7 @@ Each configuration can be expressed within a hash, keyed by user account where a
 `[config: client : {global | user-account} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config).
 
-###### Example
+##### Example
 
  ```yaml
   config:
@@ -144,9 +148,11 @@ Each configuration can be expressed within a hash, keyed by user account where a
               IdentityFile: '~/.ssh/prod_rsa'
   ```
   
-##### Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.
+#### Known Hosts
 
-*** Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. (Reference)[https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT] for more details ***
+**Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.**
+
+*** Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. [Reference](https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT) for more details ***
   
 `[config: known_hosts : {global | user-account} : {entry} :] marker: <@cert-authority | @revoke>` (**default**: *None*)
 - indicates that the line contains either a certification authority (@cert-authority) key or “@revoked” to indicate that the key contained on the line is revoked and must not ever be accepted
@@ -162,7 +168,7 @@ Cryptographic keys included can be expressed in several formats:
 * _file - local path on controller to file containing keydefinition_
 * _hash - dict containing separate keys for key definition components ({type:...,encoding:...,comments:...})_
 
-###### Example
+##### Example
 
  ```yaml
   config:
@@ -200,9 +206,11 @@ Cryptographic keys included can be expressed in several formats:
               comments: "Known host key"
   ```
 
-##### SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).
+#### Authorized Keys
 
-*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. (Reference)[https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT] for more details***
+**SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).**
+
+*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. [Reference](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT) for more details***
   
 `[config : authorized_keys : {user-account} : {entry}:] key: <pub-key>` (**default**: *None*)
 - cryptographic public key representing proof of authenticity for client's connecting to the target user account
@@ -215,7 +223,7 @@ As with the *known_hosts* configuration above, authorized keys included can be e
 `[config : authorized_keys : {user-account} : {entry} :] options : <list of options>` (**default**: *None*)
 - list of options to apply to connections
 
-###### Example
+##### Example
 
  ```yaml
   config:
@@ -233,8 +241,29 @@ As with the *known_hosts* configuration above, authorized keys included can be e
               - no-port-forwarding
             key: "/home/user-account/.ssh/home_dump.pub"
   ```
+#### User Identities
+
+** Use the `user_identities` configuration object to manage cryptographic public and private key pairs owned by various users throughout a network. This functionality allows for the copying of both public and private keys into their respective locations for user-host/account access across administrated machines (i.e. `~/.ssh/`). Each identity specification is defined under `config.user_identities` and expects keys and paths relative to the controller machine's filesystem.**
+
+*** Due to the sensitive and precise nature of handling user identities, keys are only copied from files as is to target machine. [Reference](https://www.ssh.com/ssh/identity-key) for further reading***
   
-#### Launch
+`[config : user_identities : {user-account} :] src: <key-file-path>` (**default**: *None*)
+- cryptographic key path located on local controller to be copied to target machine on behalf of designated *user-account*
+  
+`[config : user_identities : {user-account} :] dest: <key-file-name>` (**default**: *None*)
+- name of key-file to be copied to on target machine
+
+##### Example
+
+ ```yaml
+  ssh_config:
+    user_identities:
+        user-account-1:
+          src: "/home/user-account-1/id_rsa"
+          dest: "my_rsa"
+  ```
+  
+### Launch
 
 Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:_
 
@@ -243,7 +272,7 @@ Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizin
 
 A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
 
-##### Example
+#### Example
   
 ```yaml
 # Launch the SSH daemon only accepting IPv4 addresses and also writing log output to a location besides the system log
@@ -255,7 +284,7 @@ extra_run_args: "-4 -E /var/log/sshd.log"
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
 
-##### Example
+#### Example
 
   ```yaml
   auto_enable_agent:
@@ -274,7 +303,37 @@ None
 Example Playbook
 ----------------
 
-TBD
+Basic setup with defaults:
+```
+- hosts: all
+  roles:
+  - role: 0xOI.openssh
+```
+
+Hardened production setup with heightened security configurations:
+```
+- hosts: prod
+  roles:
+  - role: 0xOI.openssh
+    vars:
+      ssh_config:
+        service:
+        client:
+```
+
+Custom development environment settings based on custom developer preferences:
+```
+- hosts: dev
+  roles:
+  - role: 0xOI.openssh
+    vars:
+      ssh_config:
+        service:
+        client:
+        known_hosts:
+        authorized_keys:
+        user_identities:
+```
 
 License
 -------
