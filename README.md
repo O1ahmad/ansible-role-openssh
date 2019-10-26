@@ -84,7 +84,7 @@ Each configuration can be expressed within a hash, keyed by user account where a
 
 ##### _SSH daemon configuration values are defined under `config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):_
 
-`[config:] service : <key: value,...>` (**default**: see `defaults/main.yml`)
+`[config:] service: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
 
 ###### Example
@@ -98,14 +98,14 @@ Each configuration can be expressed within a hash, keyed by user account where a
       PubKeyAuthentication: "yes"
   ```
   
-##### _SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)_
+##### SSH client configuration values are defined under `config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)
 
-##### Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:
+*** Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis: ***
   
-`[config:] client : <global | user-account> : keyword : <Host | Match>` (**default**: *Host*)
+`[config: client : {global | user-account} :] keyword: <Host | Match>` (**default**: *Host*)
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details).
   
-`[config:] client : <global | user-account> : options : <key: value,...>` (**default**: see `defaults/main.yml`)
+`[config: client : {global | user-account} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config).
 
 ###### Example
@@ -144,17 +144,17 @@ Each configuration can be expressed within a hash, keyed by user account where a
               IdentityFile: '~/.ssh/prod_rsa'
   ```
   
-##### _Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly._
+##### Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.
 
-##### Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`:
+*** Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. (Reference)[https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT] for more details ***
   
-`[config:] known_hosts : {global | user-account} : marker: <@cert-authority | @revoke>` (**default**: *None*)
+`[config: known_hosts : {global | user-account} : {entry} :] marker: <@cert-authority | @revoke>` (**default**: *None*)
 - indicates that the line contains either a certification authority (@cert-authority) key or “@revoked” to indicate that the key contained on the line is revoked and must not ever be accepted
   
-`[config:] known_hosts : {global | user-account} : hostnames : <list of patterns>` (**default**: *None*)
-- comma-separated list of patterns matched against hostnames to verify known identity
+`[config: known_hosts : {global | user-account} : {entry} :] hostnames: <list of patterns>` (**default**: *None*)
+- list of comma-separated patterns matched against hostnames to verify known identity
 
-`[config:] known_hosts : {global | user-account} : key : <host-pub-key>` (**default**:*None*)
+`[config: known_hosts : {global | user-account} : {entry} :] key: <host-pub-key>` (**default**:*None*)
 - cryptographic public host key representing proof of authenticity for host being connected to
 
 Cryptographic keys included can be expressed in several formats:
@@ -200,6 +200,40 @@ Cryptographic keys included can be expressed in several formats:
               comments: "Known host key"
   ```
 
+##### SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).
+
+*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. (Reference)[https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT] for more details***
+  
+`[config : authorized_keys : {user-account} : {entry}:] key: <pub-key>` (**default**: *None*)
+- cryptographic public key representing proof of authenticity for client's connecting to the target user account
+
+As with the *known_hosts* configuration above, authorized keys included can be expressed in several formats:
+* _string - key definition containing: key-type, encoded key and additional comments_
+* _file - local path on controller to file containing keydefinition_
+* _hash - dict containing separate keys for key definition components ({type:...,encoding:...,comments:...})_
+  
+`[config : authorized_keys : {user-account} : {entry} :] options : <list of options>` (**default**: *None*)
+- list of options to apply to connections
+
+###### Example
+
+ ```yaml
+  config:
+    authorized_keys:
+        user-account-1:
+          "Basic Connection w/ no custom options":
+            key:
+              type: "ssh-rsa"
+              encoding: "th!s !s @ k3y"
+              comments: "these are the key comments"
+          "Backup home directory":
+            options:
+              - "command='dump /home/user-account-1'"
+              - no-pty
+              - no-port-forwarding
+            key: "/home/user-account/.ssh/home_dump.pub"
+  ```
+  
 #### Launch
 
 Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:_
