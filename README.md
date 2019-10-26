@@ -66,6 +66,13 @@ _The following variables can be customized to control various aspects of this in
 `auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: None - see `test/integration/enable_ssh_agent/default_playbook.yml` for examples)
 - indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
 
+ ```yaml
+  auto_enable_agent:
+    # user
+    example-1: {}
+    example-2: {}
+  ```
+
 #### Config
 
 TBD
