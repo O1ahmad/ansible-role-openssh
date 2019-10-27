@@ -183,7 +183,7 @@ Cryptographic keys included can be expressed in several formats:
           "Revoke ALL evil hosts":
             hostnames:
               - "*.evil.org"
-            # key expressed string
+            # key expressed as string
             key: "ssh-rsa @k3y..."
             # mark for revocation
             marker: "@revoked"
