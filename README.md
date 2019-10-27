@@ -1,7 +1,7 @@
 Ansible Role :closed_lock_with_key: OpenSSH
 =========
-[![Galaxy Role](https://img.shields.io/ansible/role/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
-[![Downloads](https://img.shields.io/ansible/role/d/41457.svg)](https://galaxy.ansible.com/0x0I/openssh)
+[![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
+[![Downloads](https://img.shields.io/ansible/role/d/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
