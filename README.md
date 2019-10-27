@@ -279,7 +279,7 @@ A list of available command-line options can be found [here](https://www.freebsd
 extra_run_args: "-4 -E /var/log/sshd.log"
 ```
 
-`[auto_enable_agent : <account>]:run_args: <cli-options>` (**default**: *None*)
+`[auto_enable_agent : <account>] : run_args: <cli-options>` (**default**: *None*)
 - list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format.
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
@@ -343,7 +343,7 @@ Hardened production setup with heightened security configurations:
                 HostKeyAlgorithms: "ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa"
 ```
               
-Development environment settings based on custom developer preferences:
+Agile-development environment settings:
 ```
 - hosts: dev
   roles:
