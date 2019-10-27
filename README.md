@@ -111,10 +111,10 @@ _**SSH client configuration values are defined under `ssh_config.client` and des
 
 *** Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis: ***
   
-`[ssh_config: client : {global | user-account} :] keyword: <Host | Match>` (**default**: *Host*)
+`[ssh_config: client : {global | user-account} : {entry} :] keyword: <Host | Match>` (**default**: *Host*)
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details)
   
-`[ssh_config: client : {global | user-account} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
+`[ssh_config: client : {global | user-account} : {entry} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config)
 
 ##### Example
