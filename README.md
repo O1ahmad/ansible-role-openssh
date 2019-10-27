@@ -318,10 +318,32 @@ Hardened production setup with heightened security configurations:
     vars:
       ssh_config:
         service:
+          # user authentication
+          AllowGroups: "devops security"
+          AuthenticationMethods: "publickey"
+          PermitRootLogin: "no"
+          PermitEmptyPasswords: "no"
+          AddKeysToAgent: "confirm"
+          # session privacy and data-integrity
+          Ciphers: "chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr"
+          MACs: "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,umac-128@openssh.com"
+          IgnoreRhosts: "yes"
+          # session management
+          ClientAliveInterval: "60"
+          ClientAliveCountMax: "2"
+          X11Forwarding: "no"
+          Banner: "You are requesting access to a PRODUCTION environment. **Proceed with caution**"
         client:
+          global:
+            '*':
+              options:
+                ForwardAgent: "no"
+                AddKeysToAgent: "confirm"
+                HashKnownHosts: "yes"
+                HostKeyAlgorithms: "ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa"
 ```
-
-Custom development environment settings based on custom developer preferences:
+              
+Development environment settings based on custom developer preferences:
 ```
 - hosts: dev
   roles:
@@ -329,10 +351,19 @@ Custom development environment settings based on custom developer preferences:
     vars:
       ssh_config:
         service:
+          AllowGroups: "ssh-user"
+          AllowAgentForwarding: "yes"
+          AddKeysToAgent: "yes"
         client:
-        known_hosts:
-        authorized_keys:
-        user_identities:
+          global:
+            '*.dev.net':
+              options:
+                ForwardAgent: "yes"
+                RemoteCommand: "/home/%r/devops/launch_team_dashboard"
+            '*.test.net':
+              options:
+                ForwardAgent: "yes"
+                RemoteCommand: "/home/%r/devops/launch_testenv_dashboard"
 ```
 
 License
