@@ -188,7 +188,7 @@ Cryptographic keys included can be expressed in several formats:
             # mark for revocation
             marker: "@revoked"
         user-account-1:
-          # add and forward keys on connections to machines with hostnames matching the dev domain
+          # mark line contains a certification authority key
           'Certified Authorities':
             hostnames:
               # host name stored in hash form
@@ -196,15 +196,14 @@ Cryptographic keys included can be expressed in several formats:
               - "certified.net,*.mydomain.org,*.mydomain.com"
             # host key read from file
             key: "/etc/ssh/cert_auth_host_rsa.pub"
-            # mark line contains a certification authority
             marker: "@cert-authority"
         user-account-2:
           'Organization network':
             hostnames:
               - "10.0.*.*"
               - "*.example.org"
-              # negate access from known compromised network
-              - "!*compromised.org"
+              # negate access from known compromised subdomain
+              - "!*compromised.example.org"
             key:
               type: "ssh-rsa"
               encoding: "th!s!s@HoSTk3y"
@@ -237,14 +236,14 @@ As with the *known_hosts* configuration above, authorized keys included can be e
           "Basic Connection w/ no custom options":
             key:
               type: "ssh-rsa"
-              encoding: "th!s !s @ k3y"
+              encoding: "th!s!s@k3y"
               comments: "these are the key comments"
           "Backup home directory":
             options:
               - "command='dump /home/user-account-1'"
               - "no-pty"
               - "no-port-forwarding"
-            key: "/home/user-account/.ssh/home_dump.pub"
+            key: "/home/user-account-1/.ssh/home_dump.pub"
   ```
 #### User Identities
 
