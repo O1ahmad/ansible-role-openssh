@@ -89,7 +89,7 @@ Each configuration can be expressed within a hash, keyed by user account where a
 
 #### Service
 
-_**SSH daemon configuration values are defined under `ssh_config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):**_
+SSH daemon configuration values are defined under `ssh_config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):
 
 `[ssh_config:] service: <key: value,...>` (**default**: see `defaults/main.yml`)
 - a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config)
@@ -107,9 +107,9 @@ _**SSH daemon configuration values are defined under `ssh_config.service` and de
   
 #### Client
 
-_**SSH client configuration values are defined under `ssh_config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user)**_
+SSH client configuration values are defined under `ssh_config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user).
 
-*** Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis: ***
+_**Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:**_
   
 `[ssh_config: client : {global | user-account} : {entry} :] keyword: <Host | Match>` (**default**: *Host*)
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details)
@@ -155,9 +155,9 @@ _**SSH client configuration values are defined under `ssh_config.client` and des
   
 #### Known Hosts
 
-_**Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `ssh_config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.**_
+Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `ssh_config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.
 
-*** Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. [Reference](https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT) for more details ***
+_**Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. [Reference](https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT) for more details**_
   
 `[ssh_config: known_hosts : {global | user-account} : {entry} :] marker: <@cert-authority | @revoke>` (**default**: *None*)
 - indicates that the line contains either a certification authority (@cert-authority) key or the key contained on the line is revoked and must not ever be accepted (@revoked)
@@ -213,9 +213,9 @@ Cryptographic keys included can be expressed in several formats:
 
 #### Authorized Keys
 
-_**SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `ssh_config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).**_
+SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `ssh_config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).
 
-*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. [Reference](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT) for more details ***
+_**Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. [Reference](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT) for more details**_
   
 `[ssh_config : authorized_keys : {user-account} : {entry}:] key: <pub-key>` (**default**: *None*)
 - cryptographic public key representing proof of authenticity for client's connecting to the target user account
@@ -248,9 +248,9 @@ As with the *known_hosts* configuration above, authorized keys included can be e
   ```
 #### User Identities
 
-_**Use the `user_identities` configuration object to manage cryptographic public and private key pairs owned by various users. This functionality allows for copying of both public and private keys into their respective locations for user-host/account access across operated machines (i.e. `~/.ssh/`). Each identity specification is defined under `ssh_config.user_identities` and expects keys and paths relative to the controller machine's filesystem.**_
+Use the `user_identities` configuration object to manage cryptographic public and private key pairs owned by various users. This functionality allows for copying of both public and private keys into their respective locations for user-host/account access across operated machines (i.e. `~/.ssh/`). Each identity specification is defined under `ssh_config.user_identities` and expects keys and paths relative to the controller machine's filesystem.
 
-*** Due to the sensitive and precise nature of handling user identities, keys are only copied from files as is to target machine. [Reference](https://www.ssh.com/ssh/identity-key) for further reading ***
+_**Due to the sensitive and precise nature of handling user identities, keys are only copied from files as is to target machine. [Reference](https://www.ssh.com/ssh/identity-key) for further reading**_
   
 `[ssh_config : user_identities : {user-account} :] src: <key-file-path>` (**default**: *None*)
 - cryptographic key path located on local controller to be copied to target machine on behalf of designated *user-account*
@@ -270,7 +270,7 @@ _**Use the `user_identities` configuration object to manage cryptographic public
   
 ### Launch
 
-_**Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:**_
+Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:
 
 `extra_run_args: <cli-options>` (**default**: None)
 - list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values
