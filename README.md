@@ -51,13 +51,13 @@ Variables are available and organized according to the following software & mach
 _The following variables can be customized to control various aspects of this installation process, ranging from the package version and user to run the SSH service as to the automatic setup of an SSH key caching agent (`ssh-agent`):_
 
 `service_package: <package-name-and-version>` (**default**: *openssh*[-latest])
-- name and version of the openssh package to download and install. [Reference](http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh) or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages for your platform.
+- name and version of the openssh package to download and install. [Reference](http://fr2.rpmfind.net/linux/rpm2html/search.php?query=openssh) or run something like `dnf --showduplicates list openssh` in a terminal to display a list of available packages for your platform
 
 `openssh_user: <service-user-name>` (**default**: *openssh*)
 - dedicated service user, group and directory used by `sshd` for privilege separation (see [README.privsep](https://github.com/openssh/openssh-portable/blob/master/README.privsep) for details)
 
 `auto_enable_agent: <hash-of-accounts-to-enable>` (**default**: *None*)
-- indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch.
+- indicates user accounts to install and automatically enable a user-scoped instance of `ssh-agent`, managed by systemd. Hash contains `run_args` key for customization of agent launch
 
 #### Example
 
@@ -72,7 +72,7 @@ _The following variables can be customized to control various aspects of this in
 
 ### Config
 
-Using this role, configuration of `openssh` is organized according to the following components:
+Using this role, configuration of an `openssh` installation is organized according to the following components:
 
 * service (`sshd_config`)
 * client (`ssh_config`)
@@ -80,14 +80,19 @@ Using this role, configuration of `openssh` is organized according to the follow
 * authorized keys (`authorized_keys`)
 * user identities (e.g. `id_rsa #private-key` and `id_rsa.pub #public-key`)
 
-Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations for reference.
+The set of component configurations to manage can be controlled using the `managed_configs` list var:
+
+`managed_configs: <list-of-component-configs>` (**default**: ALL *see defaults/main.yml*)
+- list of SSH components' configuration to manage via this role
+
+Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations of each for reference.
 
 #### Service
 
 _**SSH daemon configuration values are defined under `ssh_config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):**_
 
 `[ssh_config:] service: <key: value,...>` (**default**: see `defaults/main.yml`)
-- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config).
+- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config)
 
 ##### Example
 
@@ -107,10 +112,10 @@ _**SSH client configuration values are defined under `ssh_config.client` and des
 *** Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis: ***
   
 `[ssh_config: client : {global | user-account} :] keyword: <Host | Match>` (**default**: *Host*)
-- entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details).
+- entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details)
   
 `[ssh_config: client : {global | user-account} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
-- a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config).
+- a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config)
 
 ##### Example
 
@@ -210,7 +215,7 @@ Cryptographic keys included can be expressed in several formats:
 
 _**SSH authorized keys are configured on a per-user basis only. Each key specification is defined under `ssh_config.authorized_keys` and rendered at the appropriate location under the specified user's local SSH directory (i.e. `~/.ssh/authorized_keys`).**_
 
-*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. [Reference](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT) for more details***
+*** Each entry contains several attributes detailing an`(authorized_)key` and `options` to associate with connection requests based on that key. [Reference](https://man.openbsd.org/sshd#AUTHORIZED_KEYS_FILE_FORMAT) for more details ***
   
 `[ssh_config : authorized_keys : {user-account} : {entry}:] key: <pub-key>` (**default**: *None*)
 - cryptographic public key representing proof of authenticity for client's connecting to the target user account
@@ -237,8 +242,8 @@ As with the *known_hosts* configuration above, authorized keys included can be e
           "Backup home directory":
             options:
               - "command='dump /home/user-account-1'"
-              - no-pty
-              - no-port-forwarding
+              - "no-pty"
+              - "no-port-forwarding"
             key: "/home/user-account/.ssh/home_dump.pub"
   ```
 #### User Identities
@@ -251,7 +256,7 @@ _**Use the `user_identities` configuration object to manage cryptographic public
 - cryptographic key path located on local controller to be copied to target machine on behalf of designated *user-account*
   
 `[ssh_config : user_identities : {user-account} :] dest: <key-file-name>` (**default**: *None*)
-- name of key-file to be copied to target machine
+- name of destination key-file to be copied to target machine
 
 ##### Example
 
@@ -268,7 +273,7 @@ _**Use the `user_identities` configuration object to manage cryptographic public
 _**Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:**_
 
 `extra_run_args: <cli-options>` (**default**: None)
-- list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values.
+- list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values
 
 A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
 
@@ -280,7 +285,7 @@ extra_run_args: "-4 -E /var/log/sshd.log"
 ```
 
 `[auto_enable_agent : <account>] : run_args: <cli-options>` (**default**: *None*)
-- list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format.
+- list of `ssh-agent` commandline arguments to modify the default behavior of individual user's SSH authentication and key caching agent. Of note, a default value for the maximum lifetime of identities added to the agent may be specified. The lifetime may be expressed in seconds or in a time format
 
 A list of available command-line options can be found [here](https://linux.die.net/man/1/ssh-agent).
 
@@ -359,11 +364,11 @@ Agile-development environment settings:
             '*.dev.net':
               options:
                 ForwardAgent: "yes"
-                RemoteCommand: "/home/%r/devops/launch_team_dashboard"
+                RemoteCommand: "/home/devops/launch_team_dashboard --user %r"
             '*.test.net':
               options:
                 ForwardAgent: "yes"
-                RemoteCommand: "/home/%r/devops/launch_testenv_dashboard"
+                RemoteCommand: "/home/devops/launch_testenv_dashboard --user %r"
 ```
 
 License
