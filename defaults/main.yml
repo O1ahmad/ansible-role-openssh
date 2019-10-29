@@ -23,7 +23,7 @@ managed_configs:
   - authorized_keys
   - user_identities
 
-config:
+ssh_config:
   service:
     # user authentication
     PasswordAuthentication: "no"
