@@ -311,14 +311,14 @@ Basic setup with defaults:
 ```
 - hosts: all
   roles:
-  - role: 0xOI.openssh
+  - role: 0x0I.openssh
 ```
 
 Hardened production setup with heightened security configurations:
 ```
 - hosts: prod
   roles:
-  - role: 0xOI.openssh
+  - role: 0x0I.openssh
     vars:
       ssh_config:
         service:
@@ -346,12 +346,32 @@ Hardened production setup with heightened security configurations:
                 HashKnownHosts: "yes"
                 HostKeyAlgorithms: "ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa"
 ```
+
+Only manage client/user configs and authorized keys:
+```
+- hosts: computer_lab
+  roles:
+  - role: 0x0I.openssh
+    vars:
+      managed_configs:
+        - client
+        - authorized_keys
+      ssh_config:
+        client:
+          .
+          .
+          .
+        authorized_keys:
+          .
+          .
+          .
+```
               
 Agile-development environment settings:
 ```
 - hosts: dev
   roles:
-  - role: 0xOI.openssh
+  - role: 0x0I.openssh
     vars:
       ssh_config:
         service:
