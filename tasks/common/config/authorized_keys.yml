@@ -6,7 +6,7 @@
     name: "{{ item.key }}"
   with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none
 
 - name: Ensure existence of users (to manage) home SSH directories
   file:
@@ -14,7 +14,7 @@
     state: directory
   with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none
 
 - name: Copy user authorized_keys configuration in place
   template:
@@ -28,4 +28,4 @@
     account: "{{ item.key }}"
   with_dict: "{{ ssh_config.authorized_keys }}"
   become: true
-  when: ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none

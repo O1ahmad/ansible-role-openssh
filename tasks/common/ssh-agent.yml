@@ -5,7 +5,7 @@
     group: "{{ item.key }}"
   with_dict: "{{ auto_enable_agent }}"
   become: true
-  when: auto_enable_agent is not none
+  when: auto_enable_agent is defined and auto_enable_agent is not none
 
 - name: Ensure existence of user shell profile file
   file:
@@ -16,7 +16,7 @@
     state: touch
   with_dict: "{{ auto_enable_agent }}"
   become: true
-  when: auto_enable_agent is not none
+  when: auto_enable_agent is defined and auto_enable_agent is not none
 
 - name: Ensure user shell has an environment variable for the ssh-auth socket
   lineinfile:
@@ -25,7 +25,7 @@
     state: present
   with_dict: "{{ auto_enable_agent }}"
   become: true
-  when: auto_enable_agent is not none
+  when: auto_enable_agent is defined and auto_enable_agent is not none
 
 - name: Ensure existence of users systemd config directory
   file:
@@ -35,7 +35,7 @@
     group: "{{ item.key }}"
   with_dict: "{{ auto_enable_agent }}"
   become: true
-  when: auto_enable_agent is not none
+  when: auto_enable_agent is defined and auto_enable_agent is not none
 
 - name: Render user controlled ssh-agent service file
   template:
@@ -50,4 +50,4 @@
     run_args: "{{ item.value.run_args }}"
   with_dict: "{{ auto_enable_agent }}"
   become: true
-  when: auto_enable_agent is not none
+  when: auto_enable_agent is defined and auto_enable_agent is not none

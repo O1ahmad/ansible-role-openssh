@@ -6,7 +6,7 @@
     name: "{{ item.key }}"
   with_dict: "{{ ssh_config.user_identities }}"
   become: true
-  when: ssh_config.user_identities is not none
+  when: ssh_config.user_identities is defined and ssh_config.user_identities is not none
 
 - name: Ensure existence of users (to manage) home SSH directories
   file:
@@ -14,7 +14,7 @@
     state: directory
   with_dict: "{{ ssh_config.user_identities }}"
   become: true
-  when: ssh_config.user_identities is not none
+  when: ssh_config.user_identities is defined and ssh_config.user_identities is not none
 
 - name: Copy user private identities from local controller host in place on remote
   copy:
@@ -25,7 +25,7 @@
     mode: '0644'
   with_dict: "{{ ssh_config.user_identities }}"
   become: true
-  when: ssh_config.user_identities is not none
+  when: ssh_config.user_identities is defined and ssh_config.user_identities is not none
 
 - name: Copy user public identities from local controller host in place on remote
   copy:
@@ -36,4 +36,4 @@
     mode: '0644'
   with_dict: "{{ ssh_config.user_identities }}"
   become: true
-  when: ssh_config.user_identities is not none
+  when: ssh_config.user_identities is defined and ssh_config.user_identities is not none
