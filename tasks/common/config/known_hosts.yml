@@ -12,7 +12,7 @@
   vars:
     account: global
   become: true
-  when: ssh_config.known_hosts is not none and "global" in ssh_config.known_hosts
+  when: ssh_config.known_hosts is defined and "global" in ssh_config.known_hosts
 
 - name: Copy user known hosts configuration in place
   template:
@@ -26,4 +26,4 @@
     account: "{{ item }}"
   with_items: "{{ ssh_config.known_hosts.keys() | difference(['global']) }}"
   become: true
-  when: ssh_config.known_hosts is not none
+  when: ssh_config.known_hosts is defined and ssh_config.known_hosts is not none
