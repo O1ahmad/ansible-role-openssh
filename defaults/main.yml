@@ -19,9 +19,6 @@ authorized_keys_file: authorized_keys
 managed_configs:
   - service
   - client
-  - known_hosts
-  - authorized_keys
-  - user_identities
 
 ssh_config:
   service:
