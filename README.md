@@ -1,3 +1,5 @@
+<p><img src="https://mpng.pngfly.com/20180417/ksq/kisspng-secure-shell-ssh-keygen-computer-servers-computer-shell-5ad620b8944a73.5640200315239825206074.jpg" alt="openssh logo" title="openssh" align="right" height="60" /></p>
+
 Ansible Role :closed_lock_with_key: OpenSSH
 =========
 [![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
