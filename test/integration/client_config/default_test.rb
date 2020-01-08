@@ -10,8 +10,6 @@ describe file('/etc/ssh/ssh_config') do
   its('group') { should eq 'root' }
   its('mode') { should cmp '0644' }
 
-  its('content') { should match("Managed by Ansible") }
-  its('content') { should match("ansible-role-openssh") }
   its('content') { should match("Host *") }
 end
 
@@ -21,7 +19,5 @@ describe file('/home/kitchen/.ssh/config') do
   its('group') { should eq 'kitchen' }
   its('mode') { should cmp '0644' }
 
-  its('content') { should match("Managed by Ansible") }
-  its('content') { should match("ansible-role-openssh") }
   its('content') { should match("Match host") }
 end
