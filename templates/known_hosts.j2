@@ -1,5 +1,5 @@
-# Managed by Ansible (0xOI/ansible-role-openssh)
-# see: known_hosts man specification -- https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT
+{{ ansible_managed | comment }}
+# see: known_hosts man specification -- https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT for more details
 
 {% for spec in ssh_config.known_hosts[account].values() %}
 {% if '.pub' in spec.key %}
