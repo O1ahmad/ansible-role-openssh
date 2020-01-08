@@ -1,6 +1,5 @@
 ---
 # default variables for openssh
-openssh_user: openssh
 
 global_config_dir: /etc/ssh
 
