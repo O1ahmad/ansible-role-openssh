@@ -87,39 +87,39 @@ platforms:
         - systemctl enable ssh.service
 
 suites:
-  - name: authorized_keys
+  - name: config_authorized_keys
     provisioner:
-      playbook: test/integration/authorized_keys/default_playbook.yml
+      playbook: test/integration/config/authorized_keys/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/authorized_keys
-  - name: client_config
+        - path: test/integration/config/authorized_keys
+  - name: config_client
     provisioner:
-      playbook: test/integration/client_config/default_playbook.yml
+      playbook: test/integration/config/config_client/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/client_config
-  - name: known_hosts
+        - path: test/integration/config/config_client
+  - name: config_known_hosts
     provisioner:
-      playbook: test/integration/known_hosts/default_playbook.yml
+      playbook: test/integration/config/known_hosts/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/known_hosts
-  - name: service_config
+        - path: test/integration/config/known_hosts
+  - name: config_service
     provisioner:
-      playbook: test/integration/service_config/default_playbook.yml
+      playbook: test/integration/config/config_service/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/service_config
-  - name: user_identities
+        - path: test/integration/config/config_service
+  - name: config_user_identities
     provisioner:
-      playbook: test/integration/user_identities/default_playbook.yml
+      playbook: test/integration/config/user_identities/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/user_identities
-  - name: enable_ssh_agent
+        - path: test/integration/config/user_identities
+  - name: setup_ssh_agent
     provisioner:
-      playbook: test/integration/enable_ssh_agent/default_playbook.yml
+      playbook: test/integration/setup/ssh_agent/default_playbook.yml
     verifier:
       inspec_tests:
-        - path: test/integration/enable_ssh_agent
+        - path: test/integration/setup/ssh_agent

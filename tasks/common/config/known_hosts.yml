@@ -1,7 +1,6 @@
 ---
-######### OpenSSH known_hosts ([ssh_]known_hosts) configuration rendering
-
 - name: Copy custom global known hosts configuration in place
+  become: true
   template:
     src: known_hosts.j2
     dest: "{{ global_config_dir }}/{{ global_knownhosts_file }}"
@@ -11,10 +10,10 @@
     backup: true
   vars:
     account: global
-  become: true
   when: ssh_config.known_hosts is defined and "global" in ssh_config.known_hosts
 
 - name: Copy user known hosts configuration in place
+  become: true
   template:
     src: known_hosts.j2
     dest: "/home/{{ item }}/.ssh/{{ user_knownhosts_file }}"
@@ -25,5 +24,4 @@
   vars:
     account: "{{ item }}"
   with_items: "{{ ssh_config.known_hosts.keys() | difference(['global']) }}"
-  become: true
-  when: ssh_config.known_hosts is defined and ssh_config.known_hosts is not none
+  when: ssh_config.known_hosts is defined and ssh_config.known_hosts.keys() | difference(['global']) | length > 0

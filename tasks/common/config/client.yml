@@ -1,7 +1,6 @@
 ---
-######### OpenSSH client (ssh_config) configuration rendering
-
 - name: Copy custom global ssh_config configuration in place
+  become: true
   template:
     src: "{{ client_config_file }}.j2"
     dest: "{{ global_config_dir }}/{{ client_config_file }}"
@@ -11,10 +10,10 @@
     backup: true
   vars:
     account: global
-  become: true
   when: ssh_config.client is defined and "global" in ssh_config.client
 
 - name: Copy user ssh_config configuration in place
+  become: true
   template:
     src: "{{ client_config_file }}.j2"
     dest: "/home/{{ item }}/.ssh/config"
@@ -24,5 +23,4 @@
   vars:
     account: "{{ item }}"
   with_items: "{{ ssh_config.client.keys() | difference(['global']) }}"
-  become: true
-  when: ssh_config.client is defined
+  when: ssh_config.client is defined and ssh_config.client.keys() | difference(['global']) | length > 0

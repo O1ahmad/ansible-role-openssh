@@ -1,7 +1,6 @@
 ---
-######### OpenSSH service (sshd_config) configuration rendering
-
 - name: Copy sshd_config configuration in place
+  become: true
   template:
     src: "{{ service_config_file }}.j2"
     dest: "{{ global_config_dir }}/{{ service_config_file }}"
@@ -10,6 +9,5 @@
     mode: 0644
     validate: /usr/sbin/sshd -t -f %s
     backup: true
-  become: true
   notify:
     - restart SSH daemon

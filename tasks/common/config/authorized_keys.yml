@@ -1,22 +1,21 @@
 ---
-######### OpenSSH Authorized Keys (authorized_keys) configuration rendering
-
 - name: Ensure existence of users to manage
+  become: true
   user:
     name: "{{ item.key }}"
   with_dict: "{{ ssh_config.authorized_keys }}"
-  become: true
-  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
 
 - name: Ensure existence of users (to manage) home SSH directories
+  become: true
   file:
     path: "/home/{{ item.key }}/.ssh"
     state: directory
   with_dict: "{{ ssh_config.authorized_keys }}"
-  become: true
-  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
 
 - name: Copy user authorized_keys configuration in place
+  become: true
   template:
     src: authorized_keys.j2
     dest: "/home/{{ item.key }}/.ssh/{{ authorized_keys_file }}"
@@ -27,5 +26,4 @@
   vars:
     account: "{{ item.key }}"
   with_dict: "{{ ssh_config.authorized_keys }}"
-  become: true
-  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys is not none
+  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
