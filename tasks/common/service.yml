@@ -1,9 +1,9 @@
 ---
 - name: Enable and start OpenSSH service
+  become: true
   service:
     name: "{{ service_name }}"
     state: started
     enabled: true
   environment:
     OPTIONS: "{{ extra_run_args }}"
-  become: true
