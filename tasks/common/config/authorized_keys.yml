@@ -18,7 +18,7 @@
   become: true
   template:
     src: authorized_keys.j2
-    dest: "/home/{{ item.key }}/.ssh/{{ authorized_keys_file }}"
+    dest: "/home/{{ item.key }}/.ssh/{{ _authorized_keys_file }}"
     owner: "{{ item.key }}"
     group: "{{ item.key }}"
     mode: 0644

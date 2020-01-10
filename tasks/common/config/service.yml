@@ -2,8 +2,8 @@
 - name: Copy sshd_config configuration in place
   become: true
   template:
-    src: "{{ service_config_file }}.j2"
-    dest: "{{ global_config_dir }}/{{ service_config_file }}"
+    src: "{{ _service_config_file }}.j2"
+    dest: "{{ _global_config_dir }}/{{ _service_config_file }}"
     owner: root
     group: root
     mode: 0644

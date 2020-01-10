@@ -2,8 +2,8 @@
 - name: Copy custom global ssh_config configuration in place
   become: true
   template:
-    src: "{{ client_config_file }}.j2"
-    dest: "{{ global_config_dir }}/{{ client_config_file }}"
+    src: "{{ _client_config_file }}.j2"
+    dest: "{{ _global_config_dir }}/{{ _client_config_file }}"
     owner: root
     group: root
     mode: 0644
@@ -15,7 +15,7 @@
 - name: Copy user ssh_config configuration in place
   become: true
   template:
-    src: "{{ client_config_file }}.j2"
+    src: "{{ _client_config_file }}.j2"
     dest: "/home/{{ item }}/.ssh/config"
     owner: "{{ item }}"
     group: "{{ item }}"
