@@ -1,5 +1,4 @@
 ---
-# main installation, configuration and operation tasks
 - name: Include OS and distribution specific variables.
   include_vars: "{{ item }}"
   with_first_found:

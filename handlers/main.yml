@@ -1,6 +1,5 @@
 ---
-# default handlers file
 - name: restart SSH daemon
-  service: name="{{ service_name }}" state=restarted
+  service: name="{{ _service_name }}" state=restarted
   environment:
     OPTIONS: "{{ extra_run_args }}"

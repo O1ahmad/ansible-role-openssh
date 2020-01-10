@@ -1,19 +1,15 @@
 ---
-# default variables for openssh
-
-global_config_dir: /etc/ssh
-
-service_name: sshd
 service_package: openssh
-service_config_file: sshd_config
-extra_run_args: ""
+_service_name: sshd
 
-client_config_file: ssh_config
+_global_config_dir: /etc/ssh
+_service_config_file: sshd_config
+_client_config_file: ssh_config
 
-global_knownhosts_file: ssh_known_hosts
-user_knownhosts_file: known_hosts
+_global_knownhosts_file: ssh_known_hosts
+_user_knownhosts_file: known_hosts
 
-authorized_keys_file: authorized_keys
+_authorized_keys_file: authorized_keys
 
 managed_configs:
   - service
@@ -44,3 +40,5 @@ ssh_config:
           AddKeysToAgent: "yes"
           # client host key connection algorithm preferences
           HostKeyAlgorithms: "ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa"
+
+extra_run_args: ""

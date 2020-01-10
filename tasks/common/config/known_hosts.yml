@@ -3,7 +3,7 @@
   become: true
   template:
     src: known_hosts.j2
-    dest: "{{ global_config_dir }}/{{ global_knownhosts_file }}"
+    dest: "{{ _global_config_dir }}/{{ _global_knownhosts_file }}"
     owner: root
     group: root
     mode: 0644
@@ -16,7 +16,7 @@
   become: true
   template:
     src: known_hosts.j2
-    dest: "/home/{{ item }}/.ssh/{{ user_knownhosts_file }}"
+    dest: "/home/{{ item }}/.ssh/{{ _user_knownhosts_file }}"
     owner: "{{ item }}"
     group: "{{ item }}"
     mode: 0644
