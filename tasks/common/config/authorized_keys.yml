@@ -1,20 +1,5 @@
 ---
-- name: Ensure existence of users to manage
-  become: true
-  user:
-    name: "{{ item.key }}"
-  with_dict: "{{ ssh_config.authorized_keys }}"
-  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
-
-- name: Ensure existence of users (to manage) home SSH directories
-  become: true
-  file:
-    path: "/home/{{ item.key }}/.ssh"
-    state: directory
-  with_dict: "{{ ssh_config.authorized_keys }}"
-  when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
-
-- name: Copy user authorized_keys configuration in place
+- name: Render authorized_keys configuration
   become: true
   template:
     src: authorized_keys.j2
@@ -27,3 +12,6 @@
     account: "{{ item.key }}"
   with_dict: "{{ ssh_config.authorized_keys }}"
   when: ssh_config.authorized_keys is defined and ssh_config.authorized_keys.keys()|length > 0
+  tags:
+    - config
+    - authorized_keys

@@ -1,5 +1,5 @@
 ---
-- name: Copy custom global ssh_config configuration in place
+- name: Render custom global ssh_config configuration
   become: true
   template:
     src: "{{ _client_config_file }}.j2"
@@ -11,8 +11,12 @@
   vars:
     account: global
   when: ssh_config.client is defined and "global" in ssh_config.client
+  tags:
+    - config
+    - client
+    - global
 
-- name: Copy user ssh_config configuration in place
+- name: Render user ssh_config configuration
   become: true
   template:
     src: "{{ _client_config_file }}.j2"
@@ -24,3 +28,7 @@
     account: "{{ item }}"
   with_items: "{{ ssh_config.client.keys() | difference(['global']) }}"
   when: ssh_config.client is defined and ssh_config.client.keys() | difference(['global']) | length > 0
+  tags:
+    - config
+    - client
+    - user

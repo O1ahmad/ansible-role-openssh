@@ -11,3 +11,6 @@
     backup: true
   notify:
     - restart SSH daemon
+  tags:
+    - config
+    - sshd
