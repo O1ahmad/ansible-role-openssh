@@ -1,5 +1,5 @@
 ---
-- name: Copy custom global known hosts configuration in place
+- name: Render custom global known hosts configuration
   become: true
   template:
     src: known_hosts.j2
@@ -11,8 +11,12 @@
   vars:
     account: global
   when: ssh_config.known_hosts is defined and "global" in ssh_config.known_hosts
+  tags:
+    - config
+    - known_hosts
+    - global
 
-- name: Copy user known hosts configuration in place
+- name: Render user known hosts configuration
   become: true
   template:
     src: known_hosts.j2
@@ -25,3 +29,7 @@
     account: "{{ item }}"
   with_items: "{{ ssh_config.known_hosts.keys() | difference(['global']) }}"
   when: ssh_config.known_hosts is defined and ssh_config.known_hosts.keys() | difference(['global']) | length > 0
+  tags:
+    - config
+    - known_hosts
+    - user

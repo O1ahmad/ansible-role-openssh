@@ -1,20 +1,5 @@
 ---
-- name: Ensure existence of users to manage
-  become: true
-  user:
-    name: "{{ item.key }}"
-  with_dict: "{{ ssh_config.user_identities }}"
-  when: ssh_config.user_identities is defined and ssh_config.user_identities.keys() | length > 0
-
-- name: Ensure existence of users (to manage) home SSH directories
-  become: true
-  file:
-    path: "/home/{{ item.key }}/.ssh"
-    state: directory
-  with_dict: "{{ ssh_config.user_identities }}"
-  when: ssh_config.user_identities is defined and ssh_config.user_identities.keys() | length > 0
-
-- name: Copy user private identities from local controller host in place on remote
+- name: Copy user private identities from local controller
   become: true
   copy:
     src: "{{ item.value.src }}"
@@ -24,6 +9,10 @@
     mode: '0644'
   with_dict: "{{ ssh_config.user_identities }}"
   when: ssh_config.user_identities is defined and ssh_config.user_identities.keys() | length > 0
+  tags:
+    - config
+    - user_identities
+    - private
 
 - name: Copy user public identities from local controller host in place on remote
   become: true
@@ -35,3 +24,7 @@
     mode: '0644'
   with_dict: "{{ ssh_config.user_identities }}"
   when: ssh_config.user_identities is defined and ssh_config.user_identities.keys() | length > 0
+  tags:
+    - config
+    - user_identities
+    - public

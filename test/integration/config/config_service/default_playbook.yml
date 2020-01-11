@@ -1,6 +1,15 @@
 ---
 - name: Default playbook for testing
   hosts: test-kitchen
+  pre_tasks:
+    - name: Create test user
+      user:
+        name: test
+    - name: Ensure existence of test's .ssh DIR
+      file:
+        path: /home/test/.ssh
+        state: directory
+        owner: test
   roles:
     - ansible-role-openssh
   vars:

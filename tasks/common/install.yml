@@ -4,3 +4,5 @@
   package:
     name: "{{ service_package }}"
     state: present
+  tags:
+    - install
