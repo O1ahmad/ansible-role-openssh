@@ -300,9 +300,9 @@ A list of available command-line options can be found [here](https://linux.die.n
        run_args: "-t 86400"
   ```
 
-#### Uninstall
+### Uninstall
 
-Remove customized user managed configs, returning the target host to its configured state prior to application of this role with the exception of managed global config settings. This can be useful for recycling users and cleaning up stale settings for example.
+Remove customized user managed configs, returning the target host to its configured state prior to application of this role with the exception of managed global config settings (e.g. can be useful for recycling users and cleaning up stale settings).
 
 _The following variable(s) can be customized to manage this uninstall process:_
 
