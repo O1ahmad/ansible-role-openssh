@@ -123,3 +123,9 @@ suites:
     verifier:
       inspec_tests:
         - path: test/integration/setup/ssh_agent
+  - name: uninstall
+    provisioner:
+      playbook: test/integration/uninstall/default_playbook.yml
+    verifier:
+      inspec_tests:
+        - path: test/integration/uninstall

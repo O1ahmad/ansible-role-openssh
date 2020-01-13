@@ -15,6 +15,7 @@ Ansible Role :closed_lock_with_key: OpenSSH
       - [Install](#install)
       - [Config](#config)
       - [Launch](#launch)
+      - [Uninstall](#uninstall)
   - [Dependencies](#dependencies)
   - [Example Playbook](#example-playbook)
   - [License](#license)
@@ -45,6 +46,7 @@ Variables are available and organized according to the following software & mach
 * _install_
 * _config_
 * _launch_
+* _uninstall_
 
 ### Install
 
@@ -297,6 +299,15 @@ A list of available command-line options can be found [here](https://linux.die.n
        # a maximum lifetime for cached identities of 86,400 seconds (or 1 day):
        run_args: "-t 86400"
   ```
+
+#### Uninstall
+
+Remove customized user managed configs, returning the target host to its configured state prior to application of this role with the exception of managed global config settings. This can be useful for recycling users and cleaning up stale settings for example.
+
+_The following variable(s) can be customized to manage this uninstall process:_
+
+`perform_uninstall: <true | false>` (**default**: `false`)
+- whether to uninstall custom user configurations, based on defined role configuration at time of execution, on a target host (**see**: `handlers/main.yml` for details)
 
 Dependencies
 ------------
