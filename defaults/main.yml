@@ -42,3 +42,5 @@ ssh_config:
           HostKeyAlgorithms: "ssh-ed25519-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ssh-ed25519,ssh-rsa"
 
 extra_run_args: ""
+
+perform_uninstall: false

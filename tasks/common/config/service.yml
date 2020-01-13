@@ -10,7 +10,7 @@
     validate: /usr/sbin/sshd -t -f %s
     backup: true
   notify:
-    - restart SSH daemon
+    - Restart SSH daemon
   tags:
     - config
     - sshd

@@ -27,7 +27,7 @@
   vars:
     account: "{{ item }}"
   with_items: "{{ ssh_config.client.keys() | difference(['global']) }}"
-  when: ssh_config.client is defined and ssh_config.client.keys() | difference(['global']) | length > 0
+  when: ssh_config.client is defined
   tags:
     - config
     - client
