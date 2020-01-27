@@ -5,6 +5,7 @@ Ansible Role :closed_lock_with_key: OpenSSH
 [![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Downloads](https://img.shields.io/ansible/role/d/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -403,7 +404,7 @@ Agile-development environment settings:
 License
 -------
 
-Apache, BSD, MIT
+MIT
 
 Author Information
 ------------------
