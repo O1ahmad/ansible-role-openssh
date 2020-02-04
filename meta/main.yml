@@ -4,7 +4,7 @@ galaxy_info:
   role_name: openssh
   description: OpenSSH (Secure Shell), a remote login tool based on the SSH protocol
   company: "O1.IO"
-  license: license (Apache, BSD, MIT)
+  license: license (MIT)
   min_ansible_version: 2.6
   platforms:
     - name: EL
