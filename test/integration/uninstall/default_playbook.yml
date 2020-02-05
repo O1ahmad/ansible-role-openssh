@@ -1,5 +1,5 @@
 ---
-- name: Default playbook for testing
+- name: OpenSSH uninstall integration test playbook
   hosts: test-kitchen
   pre_tasks:
     - name: Create test user

@@ -1,4 +1,4 @@
-title "OpenSSH authorized_keys configuration integrated test file"
+title "OpenSSH authorized_keys configuration integration tests"
 
 describe file('/home/test/.ssh/authorized_keys') do
   it { should exist }

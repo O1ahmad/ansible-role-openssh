@@ -1,10 +1,11 @@
-title "Default role integrated test file"
+title "OpenSSH service configuration integration tests"
 
 describe file('/etc/ssh/sshd_config') do
   it { should exist }
   its('owner') { should eq 'root' }
   its('group') { should eq 'root' }
   its('mode') { should cmp '0644' }
+  its('content') { should match('PrintMotd no') }
 end
 
 describe service('sshd') do

@@ -1,4 +1,4 @@
-title "OpenSSH authorized_keys configuration integrated test file"
+title "OpenSSH user identities configuration integration tests"
 
 describe file('/home/kitchen/.ssh/id_rsa') do
   it { should exist }
