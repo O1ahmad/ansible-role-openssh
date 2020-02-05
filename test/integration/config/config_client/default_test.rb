@@ -1,4 +1,4 @@
-title "Client configuration integrated test file"
+title "OpenSSH client configuration integration tests"
 
 describe command('which ssh') do
   its('exit_status') { should eq 0 }

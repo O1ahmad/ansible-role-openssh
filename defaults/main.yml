@@ -43,4 +43,6 @@ ssh_config:
 
 extra_run_args: ""
 
+auto_enable_agent: []
+
 perform_uninstall: false

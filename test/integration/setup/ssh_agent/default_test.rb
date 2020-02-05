@@ -1,4 +1,4 @@
-title "OpenSSH ssh-agent service management integrated test file"
+title "OpenSSH ssh-agent setup integration tests"
 
 describe file('/home/kitchen/.config/systemd/user/ssh-agent.service') do
   it { should exist }

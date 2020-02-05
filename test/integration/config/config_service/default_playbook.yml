@@ -1,5 +1,5 @@
 ---
-- name: Default playbook for testing
+- name: OpenSSH service configuration integration test playbook
   hosts: test-kitchen
   pre_tasks:
     - name: Create test user
@@ -11,36 +11,10 @@
         state: directory
         owner: test
   roles:
-    - ansible-role-openssh
-  vars:
-    managed_configs:
-      - client
-      - known_hosts
-      - service
-      - authorized_keys
-      - user_identities
-    auto_enable_agent: []
-    ssh_config:
-      authorized_keys:
-        test:
-          "test-key":
-            options:
-              - "command='dump /home'"
-            key: "/etc/ssh/ssh_host_rsa_key.pub"
-      client:
-        global:
-          '*':
-            options:
-              ForwardAgent: 'yes'
-      known_hosts:
-        kitchen:
-          "test-key-dict":
-            hostnames:
-              - "*"
-            key: "a key with comments"
-      service:
-        PrintMotd: 'no'
-      user_identities:
-        kitchen:
-          src: "/etc/ssh/ssh_host_rsa_key"
-          dest: "id_rsa"
+    - role: ansible-role-openssh
+      vars:
+        managed_configs:
+          - service
+        ssh_config:
+          service:
+            PrintMotd: 'no'

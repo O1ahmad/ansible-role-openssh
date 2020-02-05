@@ -1,4 +1,4 @@
-title "Default role integrated uninstallation test file"
+title "OpenSSH uninstall integration tests"
 
 describe file('/home/test/.ssh/config') do
   it { should_not exist }
