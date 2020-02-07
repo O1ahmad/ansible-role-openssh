@@ -27,6 +27,7 @@ provisioner:
   require_ruby_for_busser: false
   ansible_verbose: true
   ansible_cfg_path: test/ansible.cfg
+  idempotency_test: true
 
 verifier:
   name: inspec
@@ -94,6 +95,7 @@ suites:
   - name: config_authorized_keys
     provisioner:
       playbook: test/integration/config/authorized_keys/default_playbook.yml
+      remove_images: true
     verifier:
       inspec_tests:
         - path: test/integration/config/authorized_keys
@@ -130,6 +132,7 @@ suites:
   - name: uninstall
     provisioner:
       playbook: test/integration/uninstall/default_playbook.yml
+      idempotency_test: false
     verifier:
       inspec_tests:
         - path: test/integration/uninstall
