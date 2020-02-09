@@ -3,7 +3,6 @@
   include_tasks: "common/preflight.yml"
   tags:
     - preflight
-    - uninstall
 
 - name: Include common install tasks
   include_tasks: "common/install.yml"
