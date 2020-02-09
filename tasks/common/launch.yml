@@ -9,4 +9,3 @@
     OPTIONS: "{{ extra_run_args }}"
   tags:
     - launch
-    - sshd
