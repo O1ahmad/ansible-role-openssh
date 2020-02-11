@@ -3,6 +3,12 @@
 Ansible Role :closed_lock_with_key: OpenSSH
 =========
 [![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/ansible-role-openssh?color=yellow)
+[![Downloads](https://img.shields.io/ansible/role/d/44128.svg?color=lightgrey)](https://galaxy.ansible.com/0x0I/openssh)
+[![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blueviolet.svg)](https://opensource.org/licenses/MIT)
+
+[![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Downloads](https://img.shields.io/ansible/role/d/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
 [![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -87,7 +93,7 @@ The set of component configurations to manage can be controlled using the `manag
 `managed_configs: <list-of-component-configs>` (**default**: ALL *see defaults/main.yml*)
 - list of SSH components' configuration to manage via this role
 
-Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs representing associated settings for each component. The following provides an overview and example configurations of each for reference.
+Each configuration can be expressed within a hash, keyed by user account where appropriate. The value of these user account keys are generally dicts representing config specifications (e.g. an entry in a user's authorized_keys file granting access to the local account for a particular key) containing a set of key-value pairs constituting associated settings for each component. The following provides an overview and example configuration of each for reference.
 
 #### Service
 
@@ -111,7 +117,7 @@ SSH daemon configuration values are defined under `ssh_config.service` and descr
 
 SSH client configuration values are defined under `ssh_config.client` and describe client config specifications, from both a global and per-user scope, to be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_config # global` and `~/.ssh/config` # per-user).
 
-_**Of note, each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:**_
+_**Each specification contains a keyword attribute to describe whether the config is anchored on a `Host (default)` or `Match` basis:**_
 
 `[ssh_config: client : {global | user-account} : {entry} :] keyword: <Host | Match>` (**default**: *Host*)
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details)
@@ -133,7 +139,7 @@ _**Of note, each specification contains a keyword attribute to describe whether 
               ForwardAgent: 'no'
         # custom settings for user-account-1
         user-account-1:
-          # add and forward keys on connections to machines with hostnames matching the dev domain
+          # add and forward keys on connections to machines with the hostname matching dev-user.dev.net
           'host "dev-user.dev.net"':
             keyword: "Match"
             options:
@@ -157,7 +163,7 @@ _**Of note, each specification contains a keyword attribute to describe whether 
 
 #### Known Hosts
 
-Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `ssh_config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts # global` and `~/.ssh/known_hosts` # per-user) accordingly.
+Like the SSH client configuration, SSH known hosts are configured based on both a global and per-user scope. Each type of config specification is defined under `ssh_config.known_hosts` and will be rendered at the appropriate locations (i.e. `/etc/ssh/ssh_known_hosts` # global and `~/.ssh/known_hosts` # per-user) accordingly.
 
 _**Each specification contains several attributes detailing `markers` and `hostname` patterns associated with and accepted on behalf of the specified (host) `key`. [Reference](https://man.openbsd.org/sshd#SSH_KNOWN_HOSTS_FILE_FORMAT) for more details**_
 
@@ -274,7 +280,7 @@ _**Due to the sensitive and precise nature of handling user identities, keys are
 Execution of both the `openssh` and `ssh-agent` daemons is accomplished utilizing the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) service management tool, standard on most Linux platforms. Both can be customized to adhere to system administrative policies by using the following launch arguments:
 
 `extra_run_args: <cli-options>` (**default**: None)
-- list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional configuration values
+- list of `sshd` commandline arguments to pass to the executable at runtime for customizing launch. This variable enables the role to be customized according to the operator's specification; whether to activate a particular operational mode, force use of a specific type of IPv address family or pass additional runtime configuration values
 
 A list of available command-line options can be found [here](https://www.freebsd.org/cgi/man.cgi?sshd(8)).
 
@@ -295,7 +301,7 @@ A list of available command-line options can be found [here](https://linux.die.n
   ```yaml
   auto_enable_agent:
     # user
-    user-account-1:
+    example:
        # automatically install a user-scoped ssh-agent for the *example* user and specify
        # a maximum lifetime for cached identities of 86,400 seconds (or 1 day):
        run_args: "-t 86400"
