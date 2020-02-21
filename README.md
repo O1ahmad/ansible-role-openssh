@@ -1,3 +1,4 @@
+<p><img src="https://code.benco.io/icon-collection/logos/ansible.svg" alt="ansible logo" title="ansible" align="left" height="60" /></p>
 <p><img src="https://mpng.pngfly.com/20180417/ksq/kisspng-secure-shell-ssh-keygen-computer-servers-computer-shell-5ad620b8944a73.5640200315239825206074.jpg" alt="openssh logo" title="openssh" align="right" height="60" /></p>
 
 Ansible Role :closed_lock_with_key: OpenSSH
