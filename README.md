@@ -96,7 +96,7 @@ Each configuration can be expressed within a hash, keyed by user account where a
 SSH daemon configuration values are defined under `ssh_config.service` and describe a service config specification to be rendered at the appropriate location (i.e. `/etc/ssh/sshd_config`):
 
 `[ssh_config:] service: <key: value,...>` (**default**: see `defaults/main.yml`)
-- a list of available command-line options can be found [here](https://man.openbsd.org/sshd_config)
+- a list of available configuration options can be found [here](https://man.openbsd.org/sshd_config)
 
 ##### Example
 
@@ -119,7 +119,7 @@ _**Each specification contains a keyword attribute to describe whether the confi
 - entry match basis (reference [here](https://man.openbsd.org/sshd_config) for more details)
 
 `[ssh_config: client : {global | user-account} : {entry} :] options: <key: value,...>` (**default**: see `defaults/main.yml`)
-- a list of available command-line options can be found [here](https://man.openbsd.org/ssh_config)
+- a list of available configuration options can be found [here](https://man.openbsd.org/ssh_config)
 
 ##### Example
 
