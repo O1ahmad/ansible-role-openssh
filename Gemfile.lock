@@ -264,7 +264,7 @@ GEM
       train-winrm (~> 0.2)
       tty-prompt (~> 0.17)
       tty-table (~> 0.10)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     json (2.3.0)
     json-schema (2.8.1)
       addressable (>= 2.4)
