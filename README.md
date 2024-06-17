@@ -3,10 +3,8 @@
 
 Ansible Role :closed_lock_with_key: OpenSSH
 =========
-[![Galaxy Role](https://img.shields.io/ansible/role/44128.svg)](https://galaxy.ansible.com/0x0I/openssh)
+[![Galaxy Role](https://img.shields.io/ansible/role/d/0x0i/openssh)](https://galaxy.ansible.com/0x0I/openssh)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/0x0I/ansible-role-openssh?color=yellow)
-[![Downloads](https://img.shields.io/ansible/role/d/44128.svg?color=lightgrey)](https://galaxy.ansible.com/0x0I/openssh)
-[![Build Status](https://travis-ci.org/0x0I/ansible-role-openssh.svg?branch=master)](https://travis-ci.org/0x0I/ansible-role-openssh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blueviolet.svg)](https://opensource.org/licenses/MIT)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
